@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RS Sehat Nusantara - SIMRS Dashboard Pelayanan</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#e21e49",
+            "inverse-surface": "#283044",
+            "inverse-primary": "#6bd8cb",
+            "on-secondary-fixed": "#001d31",
+            "error-container": "#ffdad6",
+            "secondary-container": "#5bb8fe",
+            "on-error": "#ffffff",
+            "outline-variant": "#bcc9c6",
+            "surface": "#faf8ff",
+            "tertiary": "#ba0035",
+            "surface-dim": "#d2d9f4",
+            "surface-container-lowest": "#ffffff",
+            "on-background": "#131b2e",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb3b6",
+            "primary": "#00685f",
+            "secondary-fixed-dim": "#93ccff",
+            "primary-container": "#008378",
+            "on-surface-variant": "#3d4947",
+            "on-primary-container": "#f4fffc",
+            "surface-container-high": "#e2e7ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#131b2e",
+            "tertiary-fixed": "#ffdada",
+            "on-primary-fixed-variant": "#005049",
+            "secondary": "#006398",
+            "on-secondary-fixed-variant": "#004b73",
+            "background": "#faf8ff",
+            "primary-fixed-dim": "#6bd8cb",
+            "on-tertiary-fixed-variant": "#920028",
+            "surface-variant": "#dae2fd",
+            "surface-container": "#eaedff",
+            "inverse-on-surface": "#eef0ff",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#cce5ff",
+            "surface-container-low": "#f2f3ff",
+            "outline": "#6d7a77",
+            "surface-tint": "#006a61",
+            "primary-fixed": "#89f5e7",
+            "on-primary-fixed": "#00201d",
+            "surface-bright": "#faf8ff",
+            "on-tertiary-fixed": "#40000c",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#fffbff",
+            "on-secondary-container": "#00476e",
+            "surface-container-highest": "#dae2fd"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "1rem",
+            "panel-gap": "1.25rem",
+            "card-padding-lg": "2rem",
+            "card-padding-sm": "1rem",
+            "gutter-mobile": "1rem",
+            "gutter-tablet": "1.5rem",
+            "margin-tablet": "2rem",
+            "margin-desktop": "2.5rem",
+            "gutter-desktop": "1.5rem",
+            "card-padding-md": "1.5rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "title-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-lg": ["1rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0", "fontWeight": "600" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.025em", "fontWeight": "800" }],
+            "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "display": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.375rem", "letterSpacing": "0", "fontWeight": "400" }],
+            "title-md": ["1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1.125rem", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.05em", "fontWeight": "700" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.015em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .glass-base {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+    .glass-card-interactive {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+  </style>
+</head>
+<body class="bg-[#f0f9ff] text-on-surface antialiased min-h-screen relative overflow-x-hidden selection:bg-primary/20 selection:text-primary">
+<!-- Ethereal Diffuse Ambient Light Blooms -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-gradient-to-tr from-sky-200/40 via-teal-100/30 to-transparent blur-[110px]"></div>
+<div class="absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-bl from-teal-200/25 via-sky-100/30 to-transparent blur-[130px]"></div>
+<div class="absolute -bottom-40 left-1/3 w-[650px] h-[650px] rounded-full bg-gradient-to-t from-cyan-100/35 via-white/50 to-transparent blur-[120px]"></div>
+</div>
+<div class="relative z-10 flex min-h-screen">
+<!-- Docked SideNavBar -->
+<aside class="fixed top-0 left-0 h-screen w-64 z-40 bg-surface-container-lowest/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-r border-outline-variant/40 dark:border-outline/30 shadow-lg shadow-on-surface/5">
+<div class="flex flex-col justify-between h-full p-4">
+<!-- Brand Header -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 px-2 pt-2">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-md shadow-primary/20 ring-2 ring-white/80">
+<span class="material-symbols-outlined text-[24px]">local_hospital</span>
+</div>
+<div>
+<h1 class="text-title-md font-title-md font-extrabold text-on-surface dark:text-inverse-on-surface tracking-tight leading-none">RS Sehat Nusantara</h1>
+<span class="inline-flex items-center gap-1.5 mt-1 text-label-sm font-label-sm text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                SIMRS FHIR v4.2 • Online
+              </span>
+</div>
+</div>
+<!-- Quick CITO CTA -->
+<div class="px-1">
+<button class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#e11d48] to-[#fb7185] hover:brightness-105 active:scale-[0.98] text-white shadow-md shadow-rose-500/25 flex items-center justify-center gap-2 transition-all group">
+<span class="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">emergency</span>
+<span class="font-label-lg text-label-lg font-bold tracking-wide">Pendaftaran Pasien CITO</span>
+</button>
+</div>
+<!-- Primary Navigation Links -->
+<nav class="space-y-1.5 pt-1">
+<!-- Active: Dashboard Pelayanan -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:text-inverse-primary font-title-md shadow-sm ring-1 ring-primary/25" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">space_dashboard</span>
+<span>Dashboard Pelayanan</span>
+</a>
+<!-- Inactive Navigation -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">clinical_notes</span>
+<span>Rawat Jalan / Poliklinik</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">emergency</span>
+<span>IGD &amp; Triase CITO</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">hotel</span>
+<span>Rawat Inap &amp; Bed Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">prescriptions</span>
+<span>Farmasi &amp; E-Resep</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">chips</span>
+<span>Laboratorium &amp; Radiologi</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">sync_saved_locally</span>
+<span>SATUSEHAT FHIR Console</span>
+</a>
+</nav>
+</div>
+<!-- Footer Navigation / Support -->
+<div class="pt-4 border-t border-outline-variant/30 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Pengaturan SIMRS</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">contact_support</span>
+<span>Pusat Bantuan Satusehat</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Container with left offset for docked rail -->
+<div class="flex-1 ml-64 flex flex-col min-w-0">
+<!-- Translucent TopNavBar -->
+<header class="sticky top-0 w-full z-30 bg-surface-container-lowest/70 dark:bg-inverse-surface/70 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm shadow-on-surface/5">
+<div class="flex items-center justify-between px-6 py-3 w-full gap-4">
+<!-- Search Bar (on_left) -->
+<div class="flex items-center gap-4 flex-1 max-w-lg">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 text-body-sm font-body-sm bg-white/70 backdrop-blur-sm border border-slate-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-on-surface placeholder:text-outline transition-all" placeholder="Cari No. RM, NIK, Nama Pasien, atau ID SatuSehat..." type="text"/>
+<kbd class="hidden sm:inline-block absolute right-3 top-1/2 -translate-y-1/2 text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded border border-slate-200">⌘K</kbd>
+</div>
+</div>
+<!-- Navigation Links Cluster (Desktop) -->
+<div class="hidden xl:flex items-center gap-6">
+<a class="text-primary dark:text-inverse-primary font-title-md border-b-2 border-primary dark:border-inverse-primary pb-1" href="#">Poliklinik Utama</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg hover:text-on-surface transition-colors" href="#">IGD Terpadu</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg hover:text-on-surface transition-colors" href="#">Depo Farmasi Central</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg hover:text-on-surface transition-colors" href="#">SATUSEHAT Gateway</a>
+</div>
+<!-- Actions & System Telemetry -->
+<div class="flex items-center gap-3">
+<!-- SATUSEHAT Status Pill with glowing teal pulse -->
+<div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-50/80 border border-teal-200/70 shadow-sm">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-600"></span>
+</span>
+<span class="text-label-sm font-label-sm font-bold text-teal-800 tracking-tight">Data Siap Dipetakan - FHIR R4</span>
+</div>
+<!-- Live Clock WIB -->
+<div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/50 border border-slate-200/60 text-slate-700 text-body-sm font-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+<span id="live-clock">09:42:15 WIB</span>
+</div>
+<!-- Action buttons -->
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 font-label-lg text-label-lg flex items-center gap-1.5 transition-all" title="Panggil Antrean Berikutnya">
+<span class="material-symbols-outlined text-[18px]">campaign</span>
+<span class="hidden 2xl:inline">Panggil Antrean</span>
+</button>
+<button class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-label-lg text-label-lg shadow-sm shadow-primary/25 hover:shadow-md hover:shadow-teal-500/30 flex items-center gap-1.5 transition-all active:scale-[0.98]" title="Sinkronisasi FHIR">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span class="hidden 2xl:inline">Sinkronisasi FHIR</span>
+</button>
+</div>
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-1 pl-1 border-l border-slate-200/80">
+<button class="p-2 text-slate-600 hover:text-primary hover:bg-white/80 rounded-xl transition-all relative">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500"></span>
+</button>
+<button class="p-2 text-slate-600 hover:text-primary hover:bg-white/80 rounded-xl transition-all" title="Koneksi Gateway">
+<span class="material-symbols-outlined text-[20px]">wifi_tethering</span>
+</button>
+<button class="p-2 text-slate-600 hover:text-primary hover:bg-white/80 rounded-xl transition-all" title="Bantuan">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+<!-- Admin Profile -->
+<div class="flex items-center gap-2 pl-2">
+<img class="w-9 h-9 rounded-xl object-cover ring-2 ring-primary/20 shadow-sm" data-alt="Modern professional portrait of dr. Adrian Sp.PD wearing white hospital clinical coat with stethoscope, soft diffused clinical lighting, high definition medical workspace setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqx5CFZgq3znJIFIs15tSwiVwrzPea-69kdtLpnfwxbM8PJSgsvW5uCgJ7TtnbLxnkAuQfpq6d9Yvk3W1Szs7E9Rm3kScNWutEZmpvXkUjnpB6CAl657WJ6yCfq7QGCeN0PgOtW3oUTEbUd4-wEhMd7vuNGp5zkOQ5sUS_jQlEh_0NH0uTnCfO-kQFlhkovpK7Si71_dlxCvu0--TfGIPG_fyWg9GfRQUPq9X52VWYQAZgGHMlZLepzA"/>
+<div class="hidden xl:block text-left leading-tight">
+<p class="font-label-lg text-label-lg font-bold text-on-surface">dr. Adrian, Sp.PD</p>
+<p class="font-label-sm text-label-sm text-outline">DPJP / Resepsionis Klinis</p>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workspace Canvas -->
+<main class="p-6 space-y-6 max-w-[1600px] mx-auto w-full">
+<!-- Welcome & Breadcrumbs Bar -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div>
+<nav class="flex items-center gap-2 text-label-sm font-label-sm text-outline mb-1">
+<span>SIMRS Terpadu</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Loket Registrasi &amp; Rawat Jalan</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Dashboard Hari Ini</span>
+</nav>
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">
+              Dashboard Pelayanan &amp; Registrasi Pasien
+            </h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-slate-200 text-slate-700 text-label-md font-label-md shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-teal-600">verified_user</span>
+              Kemenkes SATUSEHAT Environment: <strong class="text-teal-700 font-bold">Production R4.01</strong>
+</span>
+</div>
+</div>
+<!-- 4 Metric KPI Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+<!-- Card 1: Total Pasien Terdaftar -->
+<div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden transition-all duration-300 hover:-translate-y-1">
+<div class="flex items-start justify-between">
+<div>
+<p class="font-label-lg text-label-lg text-slate-600">Total Pasien Terdaftar</p>
+<h3 class="mt-2 text-headline-lg font-headline-lg font-extrabold text-on-surface tracking-tight">1,428</h3>
+</div>
+<div class="w-12 h-12 rounded-2xl bg-teal-500/10 text-teal-700 border border-teal-300/40 flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.35)]">
+<span class="material-symbols-outlined text-[26px]">groups</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-label-sm font-label-sm">
+<span class="inline-flex items-center text-teal-700 font-bold bg-teal-100/60 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +12%
+              </span>
+<span class="text-slate-500">vs bulan lalu</span>
+</div>
+</div>
+<!-- Card 2: Kunjungan Hari Ini -->
+<div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden transition-all duration-300 hover:-translate-y-1">
+<div class="flex items-start justify-between">
+<div>
+<p class="font-label-lg text-label-lg text-slate-600">Kunjungan Hari Ini</p>
+<h3 class="mt-2 text-headline-lg font-headline-lg font-extrabold text-on-surface tracking-tight">142</h3>
+</div>
+<div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-700 border border-cyan-300/40 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.35)]">
+<span class="material-symbols-outlined text-[26px]">badge</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-label-sm font-label-sm">
+<span class="inline-flex items-center text-cyan-700 font-bold bg-cyan-100/60 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 86%
+              </span>
+<span class="text-slate-500">dari kuota harian (165)</span>
+</div>
+</div>
+<!-- Card 3: Pasien Menunggu di Loket -->
+<div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 border-amber-200/50">
+<div class="flex items-start justify-between">
+<div>
+<p class="font-label-lg text-label-lg text-slate-600">Pasien Menunggu di Loket</p>
+<h3 class="mt-2 text-headline-lg font-headline-lg font-extrabold text-amber-700 tracking-tight">18</h3>
+</div>
+<div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 border border-amber-300/40 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.25)]">
+<span class="material-symbols-outlined text-[26px]">hourglass_top</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-label-sm font-label-sm">
+<span class="inline-flex items-center text-amber-800 font-bold bg-amber-100/80 px-2 py-0.5 rounded-md">
+                Waktu tunggu rerata
+              </span>
+<span class="text-slate-700 font-medium">~7.4 Menit</span>
+</div>
+</div>
+<!-- Card 4: Kunjungan Selesai -->
+<div class="glass-card-interactive rounded-2xl p-5 relative overflow-hidden transition-all duration-300 hover:-translate-y-1">
+<div class="flex items-start justify-between">
+<div>
+<p class="font-label-lg text-label-lg text-slate-600">Kunjungan Selesai</p>
+<h3 class="mt-2 text-headline-lg font-headline-lg font-extrabold text-teal-800 tracking-tight">94</h3>
+</div>
+<div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-700 border border-emerald-300/40 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+<span class="material-symbols-outlined text-[26px]">task_alt</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-label-sm font-label-sm">
+<span class="inline-flex items-center text-emerald-700 font-bold bg-emerald-100/60 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[14px]">check</span> 66.2%
+              </span>
+<span class="text-slate-500">selesai encounter</span>
+</div>
+</div>
+</section>
+<!-- Main Body Grid: 8-col Analytics + 4-col Quick Action & Desk Status -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left/Center (8 Columns): Visit Trend Analytics Card -->
+<div class="lg:col-span-8 glass-card-interactive rounded-2xl p-6 flex flex-col justify-between">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100/80 pb-4">
+<div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">show_chart</span>
+                    Tren Kunjungan &amp; Distribusi Poliklinik (7 Hari Terakhir)
+                  </h3>
+<p class="text-body-sm font-body-sm text-outline mt-0.5">Analisis kapasitas antrean pasien poliklinik terintegrasi SATUSEHAT Encounter</p>
+</div>
+<!-- Period Filter -->
+<div class="flex items-center bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 text-label-sm font-label-sm">
+<button class="px-3 py-1 rounded-lg bg-white font-bold text-primary shadow-xs">Minggu Ini</button>
+<button class="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-colors">Bulan Lalu</button>
+<button class="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition-colors">Triwulan</button>
+</div>
+</div>
+<!-- Distribution Pills -->
+<div class="flex flex-wrap gap-2 pt-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-label-sm font-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                  Poli Penyakit Dalam (42 Pasien)
+                </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-label-sm font-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                  Poli Anak (34 Pasien)
+                </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-label-sm font-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Poli Bedah (28 Pasien)
+                </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-200 text-violet-800 text-label-sm font-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-violet-500"></span>
+                  Poli Mata (19 Pasien)
+                </span>
+</div>
+<!-- Smooth Vector Curve Chart Visualization -->
+<div class="mt-6 relative h-56 w-full">
+<svg class="w-full h-full overflow-visible" fill="none" viewbox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+<!-- Gradient Defs -->
+<defs>
+<lineargradient id="curveGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#008378" stop-opacity="0.32"></stop>
+<stop offset="60%" stop-color="#5bb8fe" stop-opacity="0.12"></stop>
+<stop offset="100%" stop-color="#ffffff" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Horizontal Grid Lines -->
+<line stroke="#e2e8f0" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="700" y1="20" y2="20"></line>
+<line stroke="#e2e8f0" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="700" y1="70" y2="70"></line>
+<line stroke="#e2e8f0" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="700" y1="120" y2="120"></line>
+<line stroke="#e2e8f0" stroke-width="1" x1="0" x2="700" y1="170" y2="170"></line>
+<!-- Area Fill -->
+<path d="M 10 160 C 90 140, 140 120, 210 85 C 280 50, 330 110, 420 60 C 490 20, 560 90, 630 45 L 690 35 L 690 170 L 10 170 Z" fill="url(#curveGradient)"></path>
+<!-- Primary Smooth Spline Line -->
+<path d="M 10 160 C 90 140, 140 120, 210 85 C 280 50, 330 110, 420 60 C 490 20, 560 90, 630 45 L 690 35" stroke="#00685f" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Secondary Benchmark Line -->
+<path d="M 10 170 C 90 155, 140 140, 210 125 C 280 110, 330 130, 420 95 C 490 75, 560 110, 630 85 L 690 80" stroke="#5bb8fe" stroke-dasharray="4 4" stroke-linecap="round" stroke-width="2"></path>
+<!-- Peak Data Dots -->
+<g class="transition-all hover:scale-110 origin-center">
+<circle class="shadow-md" cx="420" cy="60" fill="#00685f" r="6" stroke="#ffffff" stroke-width="3"></circle>
+<circle cx="420" cy="60" r="10" stroke="#008378" stroke-opacity="0.3" stroke-width="2"></circle>
+</g>
+<g class="transition-all hover:scale-110 origin-center">
+<circle cx="690" cy="35" fill="#008378" r="6" stroke="#ffffff" stroke-width="3"></circle>
+</g>
+</svg>
+<!-- Floating Peak Metric Tooltip on Day 5 -->
+<div class="absolute top-4 left-[58%] -translate-x-1/2 px-2.5 py-1 rounded-xl bg-on-surface/90 text-white text-[11px] font-semibold backdrop-blur-md shadow-lg flex items-center gap-1.5 pointer-events-none">
+<span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                  Puncak Kunjungan: 142 Pasien (Poli Dalam)
+                </div>
+</div>
+<!-- Day Axis -->
+<div class="flex justify-between text-label-sm font-label-sm text-outline px-2 pt-2 border-t border-slate-100">
+<span>Senin (18)</span>
+<span>Selasa (19)</span>
+<span>Rabu (20)</span>
+<span>Kamis (21)</span>
+<span class="text-primary font-bold">Jumat (22 - Hari Ini)</span>
+<span>Sabtu (23)</span>
+<span>Minggu (24)</span>
+</div>
+</div>
+<!-- Bottom summary metric pills inside chart card -->
+<div class="grid grid-cols-3 gap-3 pt-5 mt-4 border-t border-slate-100">
+<div class="p-2.5 rounded-xl bg-white/60 border border-slate-200/60">
+<span class="text-label-sm font-label-sm text-slate-500 block">Kapasitas Poli Terpakai</span>
+<span class="text-title-md font-title-md font-bold text-on-surface">88.2%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-white/60 border border-slate-200/60">
+<span class="text-label-sm font-label-sm text-slate-500 block">Sinkronisasi SatuSehat Sukses</span>
+<span class="text-title-md font-title-md font-bold text-teal-700">99.4%</span>
+</div>
+<div class="p-2.5 rounded-xl bg-white/60 border border-slate-200/60">
+<span class="text-label-sm font-label-sm text-slate-500 block">Pembatalan / Reschedule</span>
+<span class="text-title-md font-title-md font-bold text-rose-600">2 Pasien</span>
+</div>
+</div>
+</div>
+<!-- Right (4 Columns): Quick Action Panel & Realtime Loket Desk -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Quick Action Glass Panel -->
+<div class="glass-card-interactive rounded-2xl p-5">
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<h3 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">bolt</span>
+                  Aksi Cepat Resepsionis
+                </h3>
+<span class="px-2 py-0.5 rounded-md bg-teal-100/70 text-primary text-label-sm font-label-sm font-bold">Fast-Lane</span>
+</div>
+<!-- Button Stack -->
+<div class="mt-4 space-y-2.5">
+<!-- Glowing Primary Button: Registrasi Pasien Baru -->
+<button class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-label-lg text-label-lg shadow-[0_4px_14px_rgba(20,184,166,0.35)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.5)] active:scale-[0.98] transition-all flex items-center justify-between group">
+<span class="flex items-center gap-2.5 font-bold">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">person_add</span>
+                    + Registrasi Pasien Baru
+                  </span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<!-- Buka Tiket Kunjungan -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-white/80 hover:bg-white text-on-surface border border-slate-200/80 font-label-lg text-label-lg shadow-sm hover:border-teal-300 transition-all flex items-center justify-between">
+<span class="flex items-center gap-2.5 font-semibold text-slate-800">
+<span class="material-symbols-outlined text-teal-600 text-[20px]">confirmation_number</span>
+                    + Buka Tiket Kunjungan (Encounter)
+                  </span>
+<span class="text-label-sm text-slate-400">Poli Rawat</span>
+</button>
+<!-- Monitoring Antrian Loket -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-white/80 hover:bg-white text-on-surface border border-slate-200/80 font-label-lg text-label-lg shadow-sm hover:border-teal-300 transition-all flex items-center justify-between">
+<span class="flex items-center gap-2.5 font-semibold text-slate-800">
+<span class="material-symbols-outlined text-sky-600 text-[20px]">display_settings</span>
+                    Monitoring Antrean Loket
+                  </span>
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+</button>
+<!-- Verifikasi NIK Dukcapil -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-white/80 hover:bg-white text-on-surface border border-slate-200/80 font-label-lg text-label-lg shadow-sm hover:border-teal-300 transition-all flex items-center justify-between">
+<span class="flex items-center gap-2.5 font-semibold text-slate-800">
+<span class="material-symbols-outlined text-indigo-600 text-[20px]">fingerprint</span>
+                    Verifikasi NIK Dukcapil &amp; BPJS
+                  </span>
+<span class="material-symbols-outlined text-[16px] text-slate-400">check_circle</span>
+</button>
+</div>
+</div>
+<!-- Real-time Loket Status -->
+<div class="glass-card-interactive rounded-2xl p-5">
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<h4 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-teal-600 text-[20px]">counter_1</span>
+                  Status Loket Pendaftaran
+                </h4>
+<span class="text-label-sm font-label-sm text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">3 Aktif</span>
+</div>
+<div class="mt-4 space-y-3">
+<!-- Loket 1 -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-white/70 border border-teal-200/60 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 font-extrabold flex items-center justify-center text-label-md">01</div>
+<div>
+<p class="font-label-lg text-label-lg text-slate-900 font-bold">Loket 1 - Pasien BPJS</p>
+<p class="font-body-sm text-body-sm text-slate-500">Petugas: Siti Aminah, A.Md.RMIK</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded">Melayani #A-024</span>
+</div>
+</div>
+<!-- Loket 2 -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-white/70 border border-teal-200/60 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 font-extrabold flex items-center justify-center text-label-md">02</div>
+<div>
+<p class="font-label-lg text-label-lg text-slate-900 font-bold">Loket 2 - Umum &amp; Asuransi</p>
+<p class="font-body-sm text-body-sm text-slate-500">Petugas: Budi Santoso</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded">Melayani #B-011</span>
+</div>
+</div>
+<!-- Loket 3 -->
+<div class="flex items-center justify-between p-3 rounded-xl bg-white/70 border border-teal-200/60 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 font-extrabold flex items-center justify-center text-label-md">03</div>
+<div>
+<p class="font-label-lg text-label-lg text-slate-900 font-bold">Loket 3 - CITO / Lansia</p>
+<p class="font-body-sm text-body-sm text-slate-500">Petugas: Ns. Ratna Dewi</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Melayani #C-005</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Table: Daftar Registrasi & Kunjungan Pasien Hari Ini -->
+<section class="glass-card-interactive rounded-2xl p-6">
+<div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+<div>
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">patient_list</span>
+</div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface">
+                  Daftar Registrasi &amp; Kunjungan Pasien Hari Ini
+                </h3>
+<span class="ml-2 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-label-sm font-label-sm font-bold">142 Data Masuk</span>
+</div>
+<p class="text-body-sm font-body-sm text-outline mt-1">Status riwayat kedatangan fisik pasien, poli tujuan, dan pemetaan SATUSEHAT Encounter FHIR R4</p>
+</div>
+<!-- Table Actions: Filter & Export -->
+<div class="flex items-center gap-2">
+<div class="relative">
+<input class="pl-8 pr-3 py-1.5 text-body-sm font-body-sm bg-white border border-slate-200 rounded-xl focus:ring-1 focus:ring-primary focus:outline-none" placeholder="Filter tabel..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[16px]">filter_list</span>
+</div>
+<button class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-label-sm font-label-sm font-semibold flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+                Ekspor FHIR
+              </button>
+</div>
+</div>
+<!-- Frosted Data Grid -->
+<div class="overflow-x-auto mt-4">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-200/80 text-label-sm font-label-sm text-slate-500 uppercase tracking-wider">
+<th class="py-3 px-4">No. RM</th>
+<th class="py-3 px-4">NIK Pasien</th>
+<th class="py-3 px-4">Nama Pasien &amp; Umur</th>
+<th class="py-3 px-4">Waktu Daftar</th>
+<th class="py-3 px-4">Poliklinik Tujuan</th>
+<th class="py-3 px-4">Status Encounter</th>
+<th class="py-3 px-4">SATUSEHAT Sync</th>
+<th class="py-3 px-4 text-center">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-body-sm font-body-sm">
+<!-- Row 1: Hendra Kurniawan -->
+<tr class="hover:bg-white/90 transition-colors group">
+<td class="py-3.5 px-4 font-bold text-primary">RM-2024-0891</td>
+<td class="py-3.5 px-4 font-mono text-slate-600 text-[13px]">3171051203890001</td>
+<td class="py-3.5 px-4">
+<div class="font-bold text-slate-900 group-hover:text-primary transition-colors">Hendra Kurniawan</div>
+<div class="text-[11px] text-slate-400">L • 35 Thn • BPJS Kesehatan</div>
+</td>
+<td class="py-3.5 px-4 text-slate-700 font-medium">08:14 WIB</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 font-semibold text-slate-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                      Penyakit Dalam
+                    </span>
+<span class="block text-[11px] text-slate-400">dr. Adrian, Sp.PD</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                      Arrived (Hadir)
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-50/80 border border-teal-300/80 text-teal-800 text-[11px] font-bold shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-teal-600">cloud_done</span>
+                      Synced Encounter #88219
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Buka Rekam Medis">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Siti Sarah Marlina -->
+<tr class="hover:bg-white/90 transition-colors group">
+<td class="py-3.5 px-4 font-bold text-primary">RM-2024-0892</td>
+<td class="py-3.5 px-4 font-mono text-slate-600 text-[13px]">3204126507920003</td>
+<td class="py-3.5 px-4">
+<div class="font-bold text-slate-900 group-hover:text-primary transition-colors">Siti Sarah Marlina</div>
+<div class="text-[11px] text-slate-400">P • 31 Thn • Asuransi Mandiri Inhealth</div>
+</td>
+<td class="py-3.5 px-4 text-slate-700 font-medium">08:22 WIB</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 font-semibold text-slate-800">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
+                      Poliklinik Anak
+                    </span>
+<span class="block text-[11px] text-slate-400">dr. Maya Safitri, Sp.A</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-bold text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-600 animate-pulse"></span>
+                      In-Progress
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-50/80 border border-teal-300/80 text-teal-800 text-[11px] font-bold shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-teal-600">cloud_done</span>
+                      Synced Patient &amp; Encounter
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Buka Rekam Medis">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Djoko Wahyudi (CITO) -->
+<tr class="hover:bg-white/90 transition-colors group bg-rose-50/30">
+<td class="py-3.5 px-4 font-bold text-rose-700">RM-2024-0893</td>
+<td class="py-3.5 px-4 font-mono text-slate-600 text-[13px]">3172081404550002</td>
+<td class="py-3.5 px-4">
+<div class="font-bold text-slate-900 group-hover:text-primary transition-colors flex items-center gap-2">
+                      Djoko Wahyudi
+                      <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">CITO</span>
+</div>
+<div class="text-[11px] text-slate-400">L • 69 Thn • Pasien Umum</div>
+</td>
+<td class="py-3.5 px-4 text-slate-700 font-medium">08:35 WIB</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 font-semibold text-slate-800">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                      IGD &amp; Bedah Akut
+                    </span>
+<span class="block text-[11px] text-slate-400">dr. Reza Triantoro, Sp.B</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-100/70 border border-rose-300 text-rose-800 font-bold text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
+                      Triase Merah
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-50/80 border border-teal-300/80 text-teal-800 text-[11px] font-bold shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-teal-600">cloud_done</span>
+                      Synced Encounter #88221
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all" title="Buka Triase CITO">
+<span class="material-symbols-outlined text-[18px]">emergency</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Nurul Khotimah -->
+<tr class="hover:bg-white/90 transition-colors group">
+<td class="py-3.5 px-4 font-bold text-primary">RM-2024-0894</td>
+<td class="py-3.5 px-4 font-mono text-slate-600 text-[13px]">3275034811980004</td>
+<td class="py-3.5 px-4">
+<div class="font-bold text-slate-900 group-hover:text-primary transition-colors">Nurul Khotimah</div>
+<div class="text-[11px] text-slate-400">P • 26 Thn • BPJS Kesehatan</div>
+</td>
+<td class="py-3.5 px-4 text-slate-700 font-medium">08:45 WIB</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 font-semibold text-slate-800">
+<span class="w-1.5 h-1.5 rounded-full bg-violet-600"></span>
+                      Poliklinik Mata
+                    </span>
+<span class="block text-[11px] text-slate-400">dr. Farida Hanum, Sp.M</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-bold text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                      Planned (Dijadwalkan)
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-300/80 text-amber-800 text-[11px] font-bold shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-amber-600">pending</span>
+                      Queueing FHIR Payload
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Buka Rekam Medis">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Bambang Pamungkas -->
+<tr class="hover:bg-white/90 transition-colors group">
+<td class="py-3.5 px-4 font-bold text-primary">RM-2024-0895</td>
+<td class="py-3.5 px-4 font-mono text-slate-600 text-[13px]">3174092509800005</td>
+<td class="py-3.5 px-4">
+<div class="font-bold text-slate-900 group-hover:text-primary transition-colors">Bambang Pamungkas</div>
+<div class="text-[11px] text-slate-400">L • 44 Thn • Pasien Umum</div>
+</td>
+<td class="py-3.5 px-4 text-slate-700 font-medium">08:58 WIB</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 font-semibold text-slate-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                      Penyakit Dalam
+                    </span>
+<span class="block text-[11px] text-slate-400">dr. Adrian, Sp.PD</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                      Arrived (Hadir)
+                    </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-50/80 border border-teal-300/80 text-teal-800 text-[11px] font-bold shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-teal-600">cloud_done</span>
+                      Synced Encounter #88225
+                    </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Buka Rekam Medis">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-4 mt-2 border-t border-slate-100 text-body-sm font-body-sm text-slate-500">
+<div>
+              Menampilkan <span class="font-bold text-slate-800">1 - 5</span> dari <span class="font-bold text-slate-800">142</span> pasien terdaftar
+            </div>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-50" disabled="">Sebelumnya</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-white font-bold">1</button>
+<button class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">2</button>
+<button class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">3</button>
+<span class="px-1 text-slate-400">...</span>
+<button class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">29</button>
+<button class="px-3 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600">Selanjutnya</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Subdued Clinical Workstation Footer -->
+<footer class="mt-auto px-6 py-4 border-t border-slate-200/60 bg-white/40 text-slate-500 flex flex-wrap items-center justify-between gap-4 text-label-sm font-label-sm">
+<div class="flex items-center gap-3">
+<span class="font-bold text-slate-700">RS Sehat Nusantara</span>
+<span>•</span>
+<span>Sistem Informasi Manajemen Rumah Sakit Terakreditasi Paripurna</span>
+<span>•</span>
+<span class="text-teal-700 font-semibold">SATUSEHAT Gateway v4.2.0-release</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Server Node: JKT-HLTH-04
+          </span>
+<span>Latensi FHIR: <strong>48ms</strong></span>
+</div>
+</footer>
+</div>
+</div>
+<!-- Inline Lightweight Micro-Interactions (Live Clock) -->
+<script>
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const clockElement = document.getElementById('live-clock');
+      if (clockElement) {
+        clockElement.textContent = `${hours}:${minutes}:${seconds} WIB`;
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body></html>
