@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Antrian Farmasi - RS Sehat Nusantara SIMRS</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim as requested -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#e21e49",
+            "inverse-surface": "#283044",
+            "inverse-primary": "#6bd8cb",
+            "on-secondary-fixed": "#001d31",
+            "error-container": "#ffdad6",
+            "secondary-container": "#5bb8fe",
+            "on-error": "#ffffff",
+            "outline-variant": "#bcc9c6",
+            "surface": "#faf8ff",
+            "tertiary": "#ba0035",
+            "surface-dim": "#d2d9f4",
+            "surface-container-lowest": "#ffffff",
+            "on-background": "#131b2e",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb3b6",
+            "primary": "#00685f",
+            "secondary-fixed-dim": "#93ccff",
+            "primary-container": "#008378",
+            "on-surface-variant": "#3d4947",
+            "on-primary-container": "#f4fffc",
+            "surface-container-high": "#e2e7ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#131b2e",
+            "tertiary-fixed": "#ffdada",
+            "on-primary-fixed-variant": "#005049",
+            "secondary": "#006398",
+            "on-secondary-fixed-variant": "#004b73",
+            "background": "#faf8ff",
+            "primary-fixed-dim": "#6bd8cb",
+            "on-tertiary-fixed-variant": "#920028",
+            "surface-variant": "#dae2fd",
+            "surface-container": "#eaedff",
+            "inverse-on-surface": "#eef0ff",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#cce5ff",
+            "surface-container-low": "#f2f3ff",
+            "outline": "#6d7a77",
+            "surface-tint": "#006a61",
+            "primary-fixed": "#89f5e7",
+            "on-primary-fixed": "#00201d",
+            "surface-bright": "#faf8ff",
+            "on-tertiary-fixed": "#40000c",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#fffbff",
+            "on-secondary-container": "#00476e",
+            "surface-container-highest": "#dae2fd"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "1rem",
+            "panel-gap": "1.25rem",
+            "card-padding-lg": "2rem",
+            "card-padding-sm": "1rem",
+            "gutter-mobile": "1rem",
+            "gutter-tablet": "1.5rem",
+            "margin-tablet": "2rem",
+            "margin-desktop": "2.5rem",
+            "gutter-desktop": "1.5rem",
+            "card-padding-md": "1.5rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "title-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-lg": ["1rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0", "fontWeight": "600" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.025em", "fontWeight": "800" }],
+            "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "display": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.375rem", "letterSpacing": "0", "fontWeight": "400" }],
+            "title-md": ["1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1.125rem", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.05em", "fontWeight": "700" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.015em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .glass-canvas {
+      background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 45%, #FFFFFF 100%);
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(224, 242, 254, 0.80);
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+    }
+    .glass-glow-teal {
+      box-shadow: 0 4px 18px rgba(0, 104, 95, 0.28);
+    }
+    .glass-glow-cito {
+      box-shadow: 0 4px 16px rgba(226, 30, 73, 0.32);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Ambient Ethereal Light Spheres -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="absolute -top-32 left-64 w-96 h-96 rounded-full bg-secondary-fixed/40 blur-3xl opacity-60"></div>
+<div class="absolute top-1/3 right-10 w-[30rem] h-[30rem] rounded-full bg-primary-fixed/30 blur-3xl opacity-40"></div>
+<div class="absolute bottom-10 left-1/2 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl opacity-50"></div>
+</div>
+<div class="flex relative z-10 min-h-screen">
+<!-- ================================================================= -->
+<!-- SHARED COMPONENT: SideNavBar (Strict implementation from JSON)   -->
+<!-- ================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-64 z-40 bg-surface-container-lowest/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-r border-outline-variant/40 dark:border-outline/30 shadow-lg shadow-on-surface/5 flex flex-col justify-between p-4">
+<!-- Top Branding & Navigation Items -->
+<div class="space-y-6">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-2 py-1.5">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-title-md font-title-md" data-icon="local_hospital">local_hospital</span>
+</div>
+<div>
+<h1 class="text-title-md font-title-md font-extrabold text-on-surface dark:text-inverse-on-surface tracking-tight">RS Sehat Nusantara</h1>
+<p class="text-body-sm font-body-sm text-outline flex items-center gap-1">
+<span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
+              SIMRS FHIR v4.2 • Online
+            </p>
+</div>
+</div>
+<!-- CTA Button in JSON -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-tertiary text-on-tertiary font-label-lg text-label-lg shadow-md hover:bg-tertiary-container transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-label-lg" data-icon="emergency">emergency</span>
+<span>Pendaftaran Pasien CITO</span>
+</button>
+<!-- Navigation Tabs Cluster (7 Tabs) -->
+<nav class="space-y-1.5">
+<!-- Tab 1: Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="space_dashboard">space_dashboard</span>
+<span>Dashboard Pelayanan</span>
+</a>
+<!-- Tab 2: Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="clinical_notes">clinical_notes</span>
+<span>Rawat Jalan / Poliklinik</span>
+</a>
+<!-- Tab 3: Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+<span>IGD &amp; Triase CITO</span>
+</a>
+<!-- Tab 4: Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="hotel">hotel</span>
+<span>Rawat Inap &amp; Bed Management</span>
+</a>
+<!-- Tab 5: ACTIVE TAB (Farmasi & E-Resep matches screen intent) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:text-inverse-primary font-title-md text-label-lg shadow-sm ring-1 ring-primary/25" href="#">
+<span class="material-symbols-outlined" data-icon="prescriptions" data-weight="fill" style="font-variation-settings: 'FILL' 1;">prescriptions</span>
+<span>Farmasi &amp; E-Resep</span>
+</a>
+<!-- Tab 6: Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="biotechnology">chips</span>
+<span>Laboratorium &amp; Radiologi</span>
+</a>
+<!-- Tab 7: Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sync_saved_locally">sync_saved_locally</span>
+<span>SATUSEHAT FHIR Console</span>
+</a>
+</nav>
+</div>
+<!-- Footer Action Links -->
+<div class="border-t border-outline-variant/30 dark:border-outline/20 pt-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-label-lg" data-icon="settings">settings</span>
+<span>Pengaturan SIMRS</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-label-lg" data-icon="contact_support">contact_support</span>
+<span>Pusat Bantuan Satusehat</span>
+</a>
+</div>
+</aside>
+<!-- ================================================================= -->
+<!-- MAIN WORKSPACE                                                    -->
+<!-- ================================================================= -->
+<div class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- =============================================================== -->
+<!-- SHARED COMPONENT: TopNavBar (Strict implementation from JSON)  -->
+<!-- =============================================================== -->
+<header class="sticky top-0 w-full z-30 bg-surface-container-lowest/70 dark:bg-inverse-surface/70 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm shadow-on-surface/5 flex items-center justify-between px-6 py-3">
+<!-- Left: Search & Location Identity -->
+<div class="flex items-center gap-6">
+<span class="text-title-md font-title-md font-extrabold text-primary dark:text-inverse-primary hidden xl:inline">
+            RS Sehat Nusantara SIMRS
+          </span>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-label-lg pointer-events-none" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-white/70 backdrop-blur-md rounded-xl border border-outline-variant/50 text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-outline" placeholder="Cari No. Resep, RM Pasien, atau Nama..." type="text"/>
+</div>
+<!-- Top Navigation Context Links from JSON -->
+<div class="hidden lg:flex items-center gap-5">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:text-on-surface transition-colors" href="#">Poliklinik Utama</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:text-on-surface transition-colors" href="#">IGD Terpadu</a>
+<!-- Active Top Sublink: Depo Farmasi Central -->
+<a class="text-primary dark:text-inverse-primary font-title-md text-label-lg border-b-2 border-primary dark:border-inverse-primary pb-1" href="#">Depo Farmasi Central</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg text-label-lg hover:text-on-surface transition-colors" href="#">SATUSEHAT Gateway</a>
+</div>
+</div>
+<!-- Right: Actions, SATUSEHAT Live Badge & Doctor Profile -->
+<div class="flex items-center gap-3">
+<!-- SATUSEHAT Live Connectivity Beacon -->
+<div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-fixed/50 border border-primary/30 text-primary">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">SATUSEHAT v4 Connected</span>
+</div>
+<!-- Trailing Secondary Action (from JSON) -->
+<button class="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-all">
+<span class="material-symbols-outlined text-label-lg" data-icon="campaign">campaign</span>
+<span>Panggil Antrean Berikutnya</span>
+</button>
+<!-- Trailing Primary Action (from JSON) -->
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg glass-glow-teal hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined text-label-lg" data-icon="sync">sync</span>
+<span>Sinkronisasi FHIR</span>
+</button>
+<!-- Icon actions from JSON: ["notifications", "wifi_tethering", "help"] -->
+<div class="flex items-center gap-1 border-l border-outline-variant/30 pl-2">
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container" title="Notifikasi">
+<span class="material-symbols-outlined text-title-md" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container" title="Jaringan Integrasi">
+<span class="material-symbols-outlined text-title-md" data-icon="wifi_tethering">wifi_tethering</span>
+</button>
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container" title="Bantuan Farmasi">
+<span class="material-symbols-outlined text-title-md" data-icon="help">help</span>
+</button>
+</div>
+<!-- Doctor Profile -->
+<div class="flex items-center gap-2 pl-2">
+<div class="w-9 h-9 rounded-full bg-primary/15 ring-2 ring-primary/30 flex items-center justify-center font-title-md font-extrabold text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of a licensed Indonesian senior pharmacist physician in clean white medical coat with an institutional ID badge, set against a softly blurred, brightly illuminated modern clinical laboratory environment in high-key daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPOOMVBPaUMQTtg8QwUsngTjziS541sSIHrNQZ1WDf7S-Xnsf-EiCJjmEVicQXRGFdnPjmJRZmR75IqVmQvhnaKsCumjjXuP7QBrDBBghB5jwHuImjBQmG_HABMRocl1GQObnOO9aYMtO4Bm1djpjzKUuzahLCvlgnI4WfpynewWMIcgQxxmEgu_EuHhp_rFMgDuzDW_jz5T5eMk7pgVn6xtp3kXNjSMBGqxoSO_lZWlhFVOxdfGW-xw"/>
+</div>
+<div class="hidden xl:block text-left">
+<p class="text-label-md font-label-md text-on-surface leading-tight">dr. Adrian, Sp.PD</p>
+<p class="text-label-sm font-label-sm text-outline">DPJP Farmakologi</p>
+</div>
+</div>
+</div>
+</header>
+<!-- =============================================================== -->
+<!-- PAGE CANVAS: CLINICAL PHARMACY QUEUE DASHBOARD                  -->
+<!-- =============================================================== -->
+<main class="flex-1 p-6 space-y-6 pb-20 glass-canvas">
+<!-- Top Title Bar & Queue Quick Mode Switcher -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-3">
+<h2 class="text-headline-md font-headline-md text-on-surface">Dashboard Antrian Farmasi</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">Depo Farmasi Sentral • Lantai 1</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+              Pemantauan alur e-Resep real-time terintegrasi SATUSEHAT FHIR R4 MedicationRequest &amp; MedicationDispense.
+            </p>
+</div>
+<!-- Quick Actions & CITO Trigger -->
+<div class="flex items-center gap-3">
+<div class="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-title-md" data-icon="timer">timer</span>
+<span>Rata-rata Waktu Tunggu: <strong class="text-primary font-bold">14.2 mnt</strong></span>
+</div>
+<!-- CITO Compound Prescription CTA -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-tertiary text-on-tertiary font-label-lg text-label-lg glass-glow-cito hover:bg-tertiary-container transition-all">
+<span class="material-symbols-outlined text-label-lg" data-icon="add_circle">add_circle</span>
+<span>+ Resep Racikan CITO</span>
+</button>
+</div>
+</div>
+<!-- ============================================================= -->
+<!-- TOP METRICS (4 GLOWING GLASS CARDS)                           -->
+<!-- ============================================================= -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- Metric 1: Menunggu Telaah -->
+<div class="glass-panel p-4 rounded-2xl relative overflow-hidden transition-all hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed/60 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-title-md" data-icon="clinical_notes">clinical_notes</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-tertiary-fixed text-tertiary text-label-sm font-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-ping"></span>
+                3 CITO Prioritas
+              </span>
+</div>
+<div class="mt-4">
+<p class="text-body-sm font-body-sm text-outline">Menunggu Telaah Obat</p>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h3 class="text-headline-md font-headline-md text-on-surface">8</h3>
+<span class="text-label-md font-label-md text-on-surface-variant">Resep Masuk</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-sky-100/80 flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>SLA telaah: ≤ 5 menit</span>
+<span class="text-tertiary font-bold">2 Perlu Verifikasi</span>
+</div>
+</div>
+<!-- Metric 2: Sedang Diracik -->
+<div class="glass-panel p-4 rounded-2xl relative overflow-hidden transition-all hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed/70 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-title-md" data-icon="science">science</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label-sm font-label-sm font-semibold">
+                2 Racikan Puyer
+              </span>
+</div>
+<div class="mt-4">
+<p class="text-body-sm font-body-sm text-outline">Sedang Disiapkan / Diracik</p>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h3 class="text-headline-md font-headline-md text-on-surface">5</h3>
+<span class="text-label-md font-label-md text-on-surface-variant">Antrian Meja Racik</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-sky-100/80 flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>3 Apoteker Aktif</span>
+<span class="text-secondary font-semibold">Beban Kerja: Normal</span>
+</div>
+</div>
+<!-- Metric 3: Siap Diserahkan -->
+<div class="glass-panel p-4 rounded-2xl relative overflow-hidden transition-all hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed/80 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-title-md" data-icon="inventory_2">inventory_2</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-label-sm font-label-sm font-bold">
+                Loket 1 &amp; 2 Aktif
+              </span>
+</div>
+<div class="mt-4">
+<p class="text-body-sm font-body-sm text-outline">Siap Diserahkan (Loket Penyerahan)</p>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h3 class="text-headline-md font-headline-md text-primary">12</h3>
+<span class="text-label-md font-label-md text-on-surface-variant">Resep Selesai Pack</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-sky-100/80 flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Antrian panggil: F-038 - F-042</span>
+<span class="text-primary font-bold">Pio Konseling: 1</span>
+</div>
+</div>
+<!-- Metric 4: Selesai Hari Ini -->
+<div class="glass-panel p-4 rounded-2xl relative overflow-hidden transition-all hover:-translate-y-0.5">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-title-md" data-icon="task_alt">task_alt</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-label-sm font-label-sm">
+                Hari ini (Shift Pagi)
+              </span>
+</div>
+<div class="mt-4">
+<p class="text-body-sm font-body-sm text-outline">Total Selesai Hari Ini</p>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h3 class="text-headline-md font-headline-md text-on-surface">84</h3>
+<span class="text-label-md font-label-md text-on-surface-variant">Resep Tuntas</span>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-sky-100/80 flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Tersinkron SATUSEHAT</span>
+<span class="text-primary font-bold">100% FHIR Valid</span>
+</div>
+</div>
+</section>
+<!-- ============================================================= -->
+<!-- QUICK FILTERS (Poliklinik Pills & View Filters)               -->
+<!-- ============================================================= -->
+<section class="flex flex-wrap items-center justify-between gap-3 pt-1">
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-label-md font-label-md text-outline mr-1">Filter Poli:</span>
+<button class="px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-lg text-label-sm shadow-sm">
+              Semua Poli (25)
+            </button>
+<button class="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-on-surface-variant font-label-lg text-label-sm border border-outline-variant/40 transition-colors">
+              Penyakit Dalam (9)
+            </button>
+<button class="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-on-surface-variant font-label-lg text-label-sm border border-outline-variant/40 transition-colors">
+              Anak / Pediatri (6)
+            </button>
+<button class="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-on-surface-variant font-label-lg text-label-sm border border-outline-variant/40 transition-colors">
+              Jantung &amp; Pembuluh (5)
+            </button>
+<button class="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-on-surface-variant font-label-lg text-label-sm border border-outline-variant/40 transition-colors">
+              Gigi &amp; Mulut (3)
+            </button>
+<button class="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white text-on-surface-variant font-label-lg text-label-sm border border-outline-variant/40 transition-colors">
+              IGD CITO (2)
+            </button>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-white/70 rounded-xl p-1 border border-outline-variant/40 text-on-surface-variant">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container text-primary font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-label-lg" data-icon="view_kanban">view_kanban</span>
+<span>Kanban Board</span>
+</button>
+<button class="px-2.5 py-1 rounded-lg hover:text-on-surface font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-label-lg" data-icon="table_rows">table_rows</span>
+<span>Tabel Data</span>
+</button>
+</div>
+<button class="p-2 rounded-xl bg-white/70 border border-outline-variant/40 text-outline hover:text-on-surface" title="Segarkan Data Antrian">
+<span class="material-symbols-outlined text-title-md" data-icon="refresh">refresh</span>
+</button>
+</div>
+</section>
+<!-- ============================================================= -->
+<!-- KANBAN 3-COLUMN BOARD                                         -->
+<!-- ============================================================= -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
+<!-- =========================================================== -->
+<!-- COLUMN 1: Pending / Menunggu Telaah (8)                     -->
+<!-- =========================================================== -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col gap-3.5">
+<!-- Column Header -->
+<div class="flex items-center justify-between pb-2 border-b border-sky-100/90">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<h3 class="text-title-md font-title-md text-on-surface">Menunggu Telaah</h3>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-label-md text-label-md font-bold">
+                8 Resep
+              </span>
+</div>
+<!-- Card 1.1: CITO Prioritas Resep -->
+<div class="glass-card rounded-xl p-4 space-y-3 ring-1 ring-tertiary/20 hover:ring-tertiary/40 transition-all">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-tertiary font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm" data-icon="bolt">bolt</span>
+                      CITO IGD
+                    </span>
+<span class="text-label-sm font-label-sm text-outline">Antrian: #F-043</span>
+</div>
+<h4 class="text-title-md font-title-md text-on-surface mt-1.5">Ny. Siti Nurhaliza (52 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-48-29-11 • NIK: 327320491***</p>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm" data-icon="schedule">schedule</span> 03:20 mnt
+                  </span>
+<span class="text-label-sm font-label-sm text-outline block mt-0.5">dr. Farhan, Sp.JP</span>
+</div>
+</div>
+<!-- Medication Preview -->
+<div class="p-2.5 rounded-lg bg-surface-container-low/80 border border-outline-variant/30 space-y-1">
+<p class="text-label-sm font-label-sm text-primary font-bold">Preview Obat (3 R/):</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">1. ISDN 5mg Sublingual tab No. X (prn cito)</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">2. Clopidogrel 75mg tab No. XXX (1x1)</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">3. Atorvastatin 20mg tab No. XXX (0-0-1)</p>
+</div>
+<!-- SATUSEHAT FHIR Indicator -->
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline pt-1">
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-label-sm" data-icon="check_circle">check_circle</span>
+                  FHIR MedicationRequest Valid
+                </span>
+<span class="text-tertiary font-semibold">Kategori: Kronis CITO</span>
+</div>
+<!-- Action Trigger -->
+<button class="w-full py-2 px-3 rounded-lg bg-primary text-on-primary font-label-lg text-label-sm glass-glow-teal hover:bg-primary-container transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="verified">verified</span>
+<span>Telaah Resep Sekarang</span>
+</button>
+</div>
+<!-- Card 1.2: Regular Resep Anak -->
+<div class="glass-card rounded-xl p-4 space-y-3 hover:ring-1 hover:ring-primary/30 transition-all">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+                      Poli Anak
+                    </span>
+<span class="text-label-sm font-label-sm text-outline">Antrian: #F-044</span>
+</div>
+<h4 class="text-title-md font-title-md text-on-surface mt-1.5">An. Kenzo Al-Ghifari (4 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-51-04-88 • BB: 16 kg</p>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm" data-icon="schedule">schedule</span> 07:15 mnt
+                  </span>
+<span class="text-label-sm font-label-sm text-outline block mt-0.5">dr. Maya, Sp.A</span>
+</div>
+</div>
+<!-- Medication Preview -->
+<div class="p-2.5 rounded-lg bg-surface-container-low/80 border border-outline-variant/30 space-y-1">
+<p class="text-label-sm font-label-sm text-secondary font-bold">Preview Obat (Racikan Puyer):</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">R/ Paracetamol 150mg + Salbutamol 1mg m.f. pulv dtd No. XV</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant truncate">R/ Cetirizine Drop 10mg/ml fls No. I</p>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline pt-1">
+<span class="text-on-surface-variant">Penjamin: BPJS Kesehatan Mandiri</span>
+<span class="text-secondary font-semibold">Dosis Pediatri OK</span>
+</div>
+<button class="w-full py-2 px-3 rounded-lg bg-surface-container hover:bg-primary/10 text-primary border border-primary/20 font-label-lg text-label-sm transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span>Telaah &amp; Masukkan Meja Racik</span>
+</button>
+</div>
+<!-- Card 1.3: Regular Resep Penyakit Dalam -->
+<div class="glass-card rounded-xl p-4 space-y-3 hover:ring-1 hover:ring-primary/30 transition-all opacity-95">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+                      Poli Penyakit Dalam
+                    </span>
+<span class="text-label-sm font-label-sm text-outline">Antrian: #F-045</span>
+</div>
+<h4 class="text-title-md font-title-md text-on-surface mt-1.5">Tn. Bambang Sutrisno (61 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-12-98-04 • BPJS PBI</p>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm" data-icon="schedule">schedule</span> 09:40 mnt
+                  </span>
+<span class="text-label-sm font-label-sm text-outline block mt-0.5">dr. Adrian, Sp.PD</span>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low/80 border border-outline-variant/30 text-body-sm font-body-sm text-on-surface-variant truncate">
+                R/ Metformin 500mg (3x1) + Glimepiride 2mg (1x1) + Candesartan 8mg (1x1)
+              </div>
+<button class="w-full py-2 px-3 rounded-lg bg-surface-container hover:bg-primary/10 text-primary border border-primary/20 font-label-lg text-label-sm transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="rate_review">rate_review</span>
+<span>Telaah Resep</span>
+</button>
+</div>
+</div>
+<!-- =========================================================== -->
+<!-- COLUMN 2: Preparing / Sedang Diracik (5)                    -->
+<!-- =========================================================== -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col gap-3.5">
+<!-- Column Header -->
+<div class="flex items-center justify-between pb-2 border-b border-sky-100/90">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary animate-pulse"></div>
+<h3 class="text-title-md font-title-md text-on-surface">Sedang Disiapkan</h3>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md font-bold">
+                5 Antrian
+              </span>
+</div>
+<!-- Card 2.1: Puyer Compounding Progress 75% -->
+<div class="glass-card rounded-xl p-4 space-y-3 ring-1 ring-secondary/25">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+                      Racikan Puyer
+                    </span>
+<span class="text-label-sm font-label-sm text-outline">Antrian: #F-039</span>
+</div>
+<h4 class="text-title-md font-title-md text-on-surface mt-1.5">An. Nadya Utami (2 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-60-11-20 • Meja Racik 2</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed/60 text-primary font-label-sm text-label-sm font-bold">
+                    75% Selesai
+                  </span>
+<span class="text-label-sm font-label-sm text-outline block mt-1">Apt. Riska, S.Farm</span>
+</div>
+</div>
+<!-- Progress Bar Compounding -->
+<div class="space-y-1.5">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span>Proses: Homogenisasi &amp; Sealing Puyer</span>
+<span class="font-bold text-primary">Tahap 3/4</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary to-primary rounded-full" style="width: 75%;"></div>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low/70 border border-outline-variant/30 text-body-sm font-body-sm">
+<span class="text-outline">Item:</span> Pulv. Ambroxol + Salbutamol + Dexamethasone (15 bungkus)
+              </div>
+<!-- Action Button -->
+<button class="w-full py-2 px-3 rounded-lg bg-secondary text-on-secondary font-label-lg text-label-sm hover:bg-secondary/90 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-label-lg" data-icon="print">print</span>
+<span>Selesai Racik &amp; Cetak Etiket</span>
+</button>
+</div>
+<!-- Card 2.2: Non-Racikan Assembling 40% -->
+<div class="glass-card rounded-xl p-4 space-y-3">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+                      Non-Racikan (Fast-Track)
+                    </span>
+<span class="text-label-sm font-label-sm text-outline">Antrian: #F-040</span>
+</div>
+<h4 class="text-title-md font-title-md text-on-surface mt-1.5">Tn. Hendra Wijaya (48 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-33-41-90 • Dispenser 1</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+                    40% Ambil Obat
+                  </span>
+<span class="text-label-sm font-label-sm text-outline block mt-1">TTK Budi Santoso</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="space-y-1.5">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span>Pengambilan dari Rak A2 &amp; Lemari Pendingin</span>
+<span class="font-bold text-secondary">2 dari 5 Item</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full" style="width: 40%;"></div>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low/70 border border-outline-variant/30 text-body-sm font-body-sm">
+<span class="text-outline">Item:</span> Lantus Solostar Insulin Pen + Jarum 4mm + Metformin 500mg
+              </div>
+<button class="w-full py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-sm border border-outline-variant/40 transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="barcode_scanner">barcode_scanner</span>
+<span>Scan Barcode Kemasan Obat</span>
+</button>
+</div>
+<!-- Card 2.3: Compounding Kapsul -->
+<div class="glass-card rounded-xl p-4 space-y-3 opacity-95">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+                      Kapsul Khusus
+                    </span>
+<span class="text-label-sm font-label-sm text-outline">Antrian: #F-041</span>
+</div>
+<h4 class="text-title-md font-title-md text-on-surface mt-1.5">Ny. Ratna Galih (39 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-77-52-19 • Poli Kulit</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed/50 text-secondary font-label-sm text-label-sm font-semibold">
+                    15% Penggerusan
+                  </span>
+</div>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 15%;"></div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low/70 border border-outline-variant/30 text-body-sm font-body-sm">
+<span class="text-outline">Formula:</span> Doxycycline + Vitamin E + N-Acetylcysteine m.f. caps No. XX
+              </div>
+<button class="w-full py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-sm border border-outline-variant/40 transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="assignment">assignment</span>
+<span>Buka Lembar Kerja Racik</span>
+</button>
+</div>
+</div>
+<!-- =========================================================== -->
+<!-- COLUMN 3: Ready / Siap Diserahkan (12)                      -->
+<!-- =========================================================== -->
+<div class="glass-panel rounded-2xl p-4 flex flex-col gap-3.5">
+<!-- Column Header -->
+<div class="flex items-center justify-between pb-2 border-b border-sky-100/90">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<h3 class="text-title-md font-title-md text-on-surface">Siap Diserahkan</h3>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-md text-label-md font-bold">
+                12 Resep
+              </span>
+</div>
+<!-- Card 3.1: Ready at Loket 2 (Hero Item) -->
+<div class="glass-card rounded-xl p-4 space-y-3.5 ring-2 ring-primary/40 bg-white/95">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary font-headline-md font-headline-md flex items-center justify-center shadow-md">
+                    F-042
+                  </div>
+<div>
+<span class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-bold">
+                      Siap di Loket 2
+                    </span>
+<h4 class="text-title-md font-title-md text-on-surface mt-1">Ny. Dewi Anggraeni (34 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-29-84-01 • Poli Obgyn</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+                  BPJS Terverifikasi
+                </span>
+</div>
+<!-- Item Checklist Pill & Validation Status -->
+<div class="p-3 rounded-xl bg-surface-container-low border border-primary/20 space-y-2">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-primary font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-primary" data-icon="check_circle">check_circle</span>
+                    4 Item Obat Terverifikasi (5 Benar)
+                  </span>
+<span class="text-outline">Keranjang: #Box-08</span>
+</div>
+<ul class="text-body-sm font-body-sm text-on-surface-variant space-y-1 pl-1">
+<li class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-label-sm text-primary" data-icon="task_alt">task_alt</span>
+<span>Folavit 400mcg tab (1x1) - 30 tablet</span>
+</li>
+<li class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-label-sm text-primary" data-icon="task_alt">task_alt</span>
+<span>Maltofer Chewable tab (1x1) - 30 tablet</span>
+</li>
+<li class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-label-sm text-primary" data-icon="task_alt">task_alt</span>
+<span>Calcium Lactate 500mg tab (2x1) - 60 tablet</span>
+</li>
+</ul>
+</div>
+<!-- Clinical Interaction Alert Clean Note -->
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant px-1">
+<span>Perlu KIE / Konseling Farmasi: <strong class="text-on-surface">Aturan Minum Zat Besi</strong></span>
+<span class="text-primary font-semibold">Etiket OK</span>
+</div>
+<!-- Prominent Glowing Teal Button -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-primary text-on-primary font-title-md text-label-lg glass-glow-teal hover:bg-primary-container transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-title-md" data-icon="volume_up">volume_up</span>
+<span>Panggil &amp; Serahkan (Loket 2)</span>
+</button>
+</div>
+<!-- Card 3.2: Ready at Loket 1 -->
+<div class="glass-card rounded-xl p-4 space-y-3">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed font-title-md font-title-md flex items-center justify-center">
+                    F-038
+                  </div>
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-fixed/60 text-secondary font-label-sm text-label-sm font-bold">
+                      Siap di Loket 1
+                    </span>
+<h4 class="text-title-md font-title-md text-on-surface mt-0.5">Tn. Rahmat Hidayat (57 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-19-45-72 • Poli Saraf</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-outline">Umum / Tunai</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low/70 border border-outline-variant/30 text-body-sm font-body-sm text-on-surface-variant flex justify-between items-center">
+<span>Gabapentin 300mg + Mecobalamin 500mcg</span>
+<span class="text-primary font-bold">2 Item</span>
+</div>
+<button class="w-full py-2 px-3 rounded-lg bg-surface-container hover:bg-primary/10 text-primary border border-primary/20 font-label-lg text-label-sm transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="campaign">campaign</span>
+<span>Panggil Ulang Pasien (Loket 1)</span>
+</button>
+</div>
+<!-- Card 3.3: Ready at Loket Penyerahan Mandiri -->
+<div class="glass-card rounded-xl p-4 space-y-3 opacity-95">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-title-md font-title-md flex items-center justify-center">
+                    F-037
+                  </div>
+<div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+                      Smart Locker Farmasi #L-04
+                    </span>
+<h4 class="text-title-md font-title-md text-on-surface mt-0.5">Ibu Veronica Tan (45 th)</h4>
+<p class="text-body-sm font-body-sm text-outline">RM: 00-84-12-65 • Paket Kronis PRB</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-title-md" data-icon="qr_code_2">qr_code_2</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low/70 border border-outline-variant/30 text-body-sm font-body-sm text-outline flex justify-between">
+<span>Notifikasi WhatsApp Pasien:</span>
+<span class="text-primary font-semibold">Terkirim (PIN: 8942)</span>
+</div>
+<button class="w-full py-2 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-sm border border-outline-variant/40 transition-all flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-label-lg" data-icon="info">info</span>
+<span>Status Pengambilan Locker</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- =============================================================== -->
+<!-- BOTTOM BAR: GLASS TICKER & FHIR TELEMETRY                       -->
+<!-- =============================================================== -->
+<footer class="fixed bottom-0 right-0 left-64 z-30 bg-white/80 dark:bg-inverse-surface/85 backdrop-blur-xl border-t border-outline-variant/30 dark:border-outline/20 px-6 py-2.5 flex flex-wrap items-center justify-between gap-4 shadow-lg shadow-on-surface/5">
+<!-- Left: Minimum Stock Alert Ticker -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-error-container text-on-error-container text-label-sm font-label-sm font-bold">
+<span class="material-symbols-outlined text-label-sm" data-icon="warning">warning</span>
+<span>BUFFER STOK KRITIS</span>
+</div>
+<div class="flex items-center gap-4 text-body-sm font-body-sm text-on-surface">
+<span class="flex items-center gap-1">
+<strong>Amoxicillin 500mg:</strong>
+<span class="text-error font-semibold">Sisa 84 kaplet</span> (Min. buffer: 200 kaplet)
+            </span>
+<span class="text-outline hidden sm:inline">•</span>
+<span class="hidden sm:flex items-center gap-1">
+<strong>Insulin Glargine Pen:</strong>
+<span class="text-secondary font-semibold">Sisa 12 pen</span>
+</span>
+<a class="text-primary hover:underline font-label-sm text-label-sm font-bold hidden md:inline" href="#">
+              + Buat Surat Pesanan (SP) CITO
+            </a>
+</div>
+</div>
+<!-- Right: SATUSEHAT FHIR Telemetry -->
+<div class="flex items-center gap-4 text-body-sm font-body-sm text-outline">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>SATUSEHAT FHIR R4: <strong class="text-primary">0 Sync Errors</strong></span>
+</div>
+<span class="text-outline">•</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm text-secondary" data-icon="speed">speed</span>
+<span>Latensi API: <strong class="text-on-surface">142ms</strong></span>
+</div>
+<span class="text-outline hidden lg:inline">•</span>
+<div class="hidden lg:flex items-center gap-1 text-on-surface-variant">
+<span>Server: <strong class="text-on-surface">prod-fhir-gateway-01</strong></span>
+</div>
+</div>
+</footer>
+</div>
+</div>
+<!-- Interactive Script for micro-interaction button states -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Simple interactive demonstration for the calling button
+      const panggilBtn = document.querySelector('button[data-action="panggil"]');
+      if (panggilBtn) {
+        panggilBtn.addEventListener('click', () => {
+          const originalText = panggilBtn.innerHTML;
+          panggilBtn.innerHTML = `<span class="material-symbols-outlined text-title-md animate-spin" data-icon="autorenew">autorenew</span> Memanggil Loket 2...`;
+          setTimeout(() => {
+            panggilBtn.innerHTML = `<span class="material-symbols-outlined text-title-md" data-icon="check">check</span> Berhasil Dipanggil`;
+            setTimeout(() => {
+              panggilBtn.innerHTML = originalText;
+            }, 2500);
+          }, 800);
+        });
+      }
+    });
+  </script>
+</body></html>

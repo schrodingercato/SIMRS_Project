@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registrasi &amp; Demografi Pasien - RS Sehat Nusantara</title>
+<!-- Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms and Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration JSON -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#e21e49",
+            "inverse-surface": "#283044",
+            "inverse-primary": "#6bd8cb",
+            "on-secondary-fixed": "#001d31",
+            "error-container": "#ffdad6",
+            "secondary-container": "#5bb8fe",
+            "on-error": "#ffffff",
+            "outline-variant": "#bcc9c6",
+            "surface": "#faf8ff",
+            "tertiary": "#ba0035",
+            "surface-dim": "#d2d9f4",
+            "surface-container-lowest": "#ffffff",
+            "on-background": "#131b2e",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb3b6",
+            "primary": "#00685f",
+            "secondary-fixed-dim": "#93ccff",
+            "primary-container": "#008378",
+            "on-surface-variant": "#3d4947",
+            "on-primary-container": "#f4fffc",
+            "surface-container-high": "#e2e7ff",
+            "on-error-container": "#93000a",
+            "on-surface": "#131b2e",
+            "tertiary-fixed": "#ffdada",
+            "on-primary-fixed-variant": "#005049",
+            "secondary": "#006398",
+            "on-secondary-fixed-variant": "#004b73",
+            "background": "#faf8ff",
+            "primary-fixed-dim": "#6bd8cb",
+            "on-tertiary-fixed-variant": "#920028",
+            "surface-variant": "#dae2fd",
+            "surface-container": "#eaedff",
+            "inverse-on-surface": "#eef0ff",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#cce5ff",
+            "surface-container-low": "#f2f3ff",
+            "outline": "#6d7a77",
+            "surface-tint": "#006a61",
+            "primary-fixed": "#89f5e7",
+            "on-primary-fixed": "#00201d",
+            "surface-bright": "#faf8ff",
+            "on-tertiary-fixed": "#40000c",
+            "on-primary": "#ffffff",
+            "on-tertiary-container": "#fffbff",
+            "on-secondary-container": "#00476e",
+            "surface-container-highest": "#dae2fd"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "1rem",
+            "panel-gap": "1.25rem",
+            "card-padding-lg": "2rem",
+            "card-padding-sm": "1rem",
+            "gutter-mobile": "1rem",
+            "gutter-tablet": "1.5rem",
+            "margin-tablet": "2rem",
+            "margin-desktop": "2.5rem",
+            "gutter-desktop": "1.5rem",
+            "card-padding-md": "1.5rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "display": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "title-md": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-lg": ["1rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0", "fontWeight": "600" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.025em", "fontWeight": "800" }],
+            "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "display": ["3.5rem", { "lineHeight": "4rem", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.375rem", "letterSpacing": "0", "fontWeight": "400" }],
+            "title-md": ["1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1.125rem", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.05em", "fontWeight": "700" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.015em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .glass-surface {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+    }
+    .glass-input {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(188, 201, 198, 0.45);
+      transition: all 0.2s ease-in-out;
+    }
+    .glass-input:focus {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #00685f;
+      box-shadow: 0 0 0 3px rgba(0, 104, 95, 0.15);
+      outline: none;
+    }
+    .teal-glow {
+      box-shadow: 0 4px 20px -2px rgba(0, 104, 95, 0.35);
+    }
+    .teal-glow:hover {
+      box-shadow: 0 6px 26px 0px rgba(0, 104, 95, 0.5);
+    }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(240, 249, 255, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(188, 201, 198, 0.6);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 104, 95, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-cyan-50/70 via-sky-50/40 to-surface min-h-screen text-on-surface font-body-md antialiased selection:bg-primary/20 selection:text-primary relative overflow-x-hidden">
+<!-- Ambient Light Blobs (Physical Light Simulation) -->
+<div class="fixed -top-40 -left-20 w-[550px] h-[550px] bg-cyan-200/30 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+<div class="fixed top-1/3 -right-20 w-[600px] h-[600px] bg-teal-100/40 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+<div class="fixed -bottom-40 left-1/3 w-[500px] h-[500px] bg-sky-200/25 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+<!-- FIXED SIDE NAVIGATION (Shared Component: SideNavBar) -->
+<aside class="fixed top-0 left-0 h-screen w-64 z-40 bg-surface-container-lowest/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-r border-outline-variant/40 dark:border-outline/30 shadow-lg shadow-on-surface/5 flex flex-col justify-between p-4 hidden lg:flex">
+<!-- Top Part / Logo -->
+<div>
+<div class="flex items-center gap-3 px-3 py-2 mb-6">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-on-primary shadow-md shadow-primary/25">
+<span class="material-symbols-outlined text-title-md" data-icon="local_hospital">local_hospital</span>
+</div>
+<div class="flex flex-col">
+<span class="text-title-md font-title-md font-extrabold text-on-surface dark:text-inverse-on-surface tracking-tight leading-tight">RS Sehat Nusantara</span>
+<span class="text-body-sm font-body-sm text-outline flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            SIMRS FHIR v4.2 • Online
+          </span>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav aria-label="Menu Utama SIMRS" class="space-y-1.5">
+<!-- 1: Dashboard Pelayanan -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="space_dashboard">space_dashboard</span>
+<span>Dashboard Pelayanan</span>
+</a>
+<!-- 2: Rawat Jalan / Poliklinik (ACTIVE MAPPING for Patient Registration / Admission) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary dark:text-inverse-primary font-title-md shadow-sm ring-1 ring-primary/25" href="#">
+<span class="material-symbols-outlined text-primary" data-icon="clinical_notes" data-weight="fill" style="font-variation-settings: 'FILL' 1;">clinical_notes</span>
+<span>Rawat Jalan / Poliklinik</span>
+</a>
+<!-- 3: IGD & Triase CITO -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="emergency">emergency</span>
+<span>IGD &amp; Triase CITO</span>
+</a>
+<!-- 4: Rawat Inap & Bed Management -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="hotel">hotel</span>
+<span>Rawat Inap &amp; Bed Management</span>
+</a>
+<!-- 5: Farmasi & E-Resep -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="prescriptions">prescriptions</span>
+<span>Farmasi &amp; E-Resep</span>
+</a>
+<!-- 6: Laboratorium & Radiologi -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="biotechnology">chips</span>
+<span>Laboratorium &amp; Radiologi</span>
+</a>
+<!-- 7: SATUSEHAT FHIR Console -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container-high/60 dark:hover:bg-surface-variant/40 hover:text-primary dark:hover:text-inverse-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="sync_saved_locally">sync_saved_locally</span>
+<span>SATUSEHAT FHIR Console</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Actions & Quick CITO CTA -->
+<div class="space-y-4 pt-3 border-t border-outline-variant/30">
+<!-- CITO CTA -->
+<button class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-tertiary to-rose-500 text-on-tertiary font-label-lg shadow-md shadow-tertiary/20 hover:shadow-lg hover:shadow-tertiary/30 transition-all duration-200" type="button">
+<span class="material-symbols-outlined text-label-lg" data-icon="warning">warning</span>
+<span>Pendaftaran Pasien CITO</span>
+</button>
+<!-- Footer Submenu -->
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high/50 hover:text-primary transition-colors text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-body-lg text-outline" data-icon="settings">settings</span>
+<span>Pengaturan SIMRS</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high/50 hover:text-primary transition-colors text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-body-lg text-outline" data-icon="contact_support">contact_support</span>
+<span>Pusat Bantuan Satusehat</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- MAIN WRAPPER (Left offset for side rail) -->
+<div class="lg:pl-64 flex flex-col min-h-screen">
+<!-- TOP BAR (Shared Component: TopNavBar) -->
+<header class="sticky top-0 w-full z-30 bg-surface-container-lowest/70 dark:bg-inverse-surface/70 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm shadow-on-surface/5">
+<div class="flex items-center justify-between px-6 py-3 w-full">
+<!-- Left: Search & Sub-nav -->
+<div class="flex items-center gap-6">
+<div class="relative w-72">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-title-md" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 text-body-sm font-body-sm rounded-xl glass-input placeholder:text-outline" placeholder="Cari Rekam Medis, NIK, atau Nama..." type="text"/>
+</div>
+<!-- Top Links (Desktop) -->
+<nav class="hidden xl:flex items-center gap-6">
+<a class="text-primary dark:text-inverse-primary font-title-md border-b-2 border-primary dark:border-inverse-primary pb-1" href="#">Poliklinik Utama</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container/50 dark:hover:bg-surface-variant/30 hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors py-1" href="#">IGD Terpadu</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container/50 dark:hover:bg-surface-variant/30 hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors py-1" href="#">Depo Farmasi Central</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-lg hover:bg-surface-container/50 dark:hover:bg-surface-variant/30 hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors py-1" href="#">SATUSEHAT Gateway</a>
+</nav>
+</div>
+<!-- Right: Actions & User -->
+<div class="flex items-center gap-3">
+<!-- Trailing Secondary: Call queue -->
+<button class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-outline-variant/40 bg-surface-container-lowest/60 text-on-surface font-label-md hover:bg-white transition-colors" type="button">
+<span class="material-symbols-outlined text-primary" data-icon="campaign">campaign</span>
+<span>Panggil Antrean Berikutnya</span>
+</button>
+<!-- Trailing Primary: Sync FHIR -->
+<button class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-md teal-glow transition-all" type="button">
+<span class="material-symbols-outlined text-body-md animate-spin" data-icon="sync">sync</span>
+<span>Sinkronisasi FHIR</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant/40 mx-1"></div>
+<!-- Trailing Icons -->
+<button class="p-2 rounded-xl text-outline hover:text-primary hover:bg-primary/5 transition-colors relative" title="Notifikasi Pelayanan">
+<span class="material-symbols-outlined text-title-md" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-tertiary rounded-full"></span>
+</button>
+<button class="p-2 rounded-xl text-outline hover:text-primary hover:bg-primary/5 transition-colors" title="Koneksi SATUSEHAT Live">
+<span class="material-symbols-outlined text-title-md text-emerald-600" data-icon="wifi_tethering">wifi_tethering</span>
+</button>
+<button class="p-2 rounded-xl text-outline hover:text-primary hover:bg-primary/5 transition-colors" title="Bantuan">
+<span class="material-symbols-outlined text-title-md" data-icon="help">help</span>
+</button>
+<!-- Profile Badge -->
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/40">
+<img class="w-8 h-8 rounded-full object-cover ring-2 ring-primary/20" data-alt="A distinguished Indonesian medical specialist doctor wearing a modern surgical white coat and stethoscope, shot in a high-key hospital clinic with bright daylight and clean architectural reflections. The visual atmosphere conveys calm professional competence and healthcare technological leadership with soft cyan highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2LXm-8MaaT8swl9uaJllFeT6AC4ky-KUejv6QmzimteNWma9zhSdGDYYNJA19cNiPs5lqkQoofEmT9rMgvOwZHLvyjmFnqSJMi9xMO9jm7uifRyvj8zDvl3q826JvdKsKlXYSFYqkSs0H8NILA6Jo7N4RhmB5WDZVbZ2JeLuTcQxoAgRwY9LlptWKU__mxIg6OGUE4165D9tCFiXTXx5dDEZ2yzxbU8ML5zm-pE5oZKupTUVoR9rQHQ"/>
+<div class="hidden md:flex flex-col text-left">
+<span class="text-label-md font-label-md text-on-surface leading-tight">dr. Adrian, Sp.PD</span>
+<span class="text-label-sm font-label-sm text-outline">Dokter Penanggung Jawab Pelayanan</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- CONTENT CANVAS -->
+<main class="flex-1 p-4 md:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
+<!-- Top Form Header & Status Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-surface rounded-2xl p-6 relative overflow-hidden">
+<div class="absolute right-0 top-0 h-full w-48 bg-gradient-to-l from-primary-fixed-dim/20 to-transparent pointer-events-none"></div>
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2.5">
+<h1 class="text-headline-sm md:text-headline-md font-headline-md text-on-surface tracking-tight">
+              Registrasi &amp; Demografi Pasien Baru
+            </h1>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-primary/10 text-primary border border-primary/20 ring-1 ring-primary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              FHIR Resource: Patient
+            </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-sky-50 text-secondary border border-secondary/20">
+<span class="material-symbols-outlined text-body-sm" data-icon="verified_user">verified_user</span>
+              Terhubung SATUSEHAT Kemenkes RI
+            </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">
+            Formulir Standar Kemenkes RI &amp; Rekam Medis Elektronik (RME) terintegrasi Master Patient Index (MPI) nasional.
+          </p>
+</div>
+<!-- Meta Counters & Quick Status -->
+<div class="flex items-center gap-3">
+<div class="bg-white/70 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/80 shadow-sm flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-teal-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-title-md" data-icon="badge">badge</span>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-outline">Nomor Rekam Medis Baru</div>
+<div class="text-title-md font-title-md font-bold text-primary tracking-wide">RM-00-28-50</div>
+</div>
+</div>
+</div>
+</div>
+<!-- WORKSPACE GRID: Split 8 Cols Form / 4 Cols Realtime FHIR Summary -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT 8 COLS: Multi-Section Patient Form -->
+<div class="lg:col-span-8 space-y-6">
+<!-- SECTION A: IDENTITAS PASIEN -->
+<div class="glass-surface rounded-2xl p-6 md:p-8 space-y-6 border border-white/80">
+<div class="flex items-center justify-between pb-4 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+                  A
+                </div>
+<div>
+<h2 class="text-title-md font-title-md text-on-surface">Identitas Pasien &amp; Verifikasi Kependudukan</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Sinkronisasi data identitas legal berdasarkan NIK e-KTP.</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-1 bg-surface-container text-outline rounded-lg">Wajib Diisi</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- NIK Field with Realtime Dukcapil Verification Badge -->
+<div class="md:col-span-2 space-y-2">
+<div class="flex items-center justify-between">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                    Nomor Induk Kependudukan (NIK 16 Digit) <span class="text-tertiary">*</span>
+</label>
+<!-- Green check glowing pill -->
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-300 text-teal-800 text-label-sm font-label-sm shadow-[0_0_12px_rgba(20,184,166,0.25)]">
+<span class="material-symbols-outlined text-body-sm text-emerald-600" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>NIK Valid (Terverifikasi Dukcapil)</span>
+</div>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-title-md" data-icon="fingerprint">fingerprint</span>
+</div>
+<input class="w-full pl-11 pr-32 py-2.5 text-body-md font-body-md tracking-wider rounded-xl glass-input font-mono text-on-surface font-semibold" id="input-nik" maxlength="16" type="text" value="3171052809920003"/>
+<div class="absolute inset-y-0 right-1.5 flex items-center">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high/80 hover:bg-surface-container text-on-surface-variant text-label-sm font-label-sm flex items-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-body-sm" data-icon="refresh">refresh</span>
+                      Cek Ulang
+                    </button>
+</div>
+</div>
+<p class="text-body-sm font-body-sm text-outline">Identitas terpetakan otomatis ke sistem master kependudukan Kemendagri &amp; SATUSEHAT.</p>
+</div>
+<!-- Nama Lengkap Sesuai KTP -->
+<div class="md:col-span-2 space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Nama Lengkap (Sesuai KTP tanpa gelar) <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-title-md" data-icon="person">person</span>
+</div>
+<input class="w-full pl-11 pr-4 py-2.5 text-body-md font-body-md rounded-xl glass-input text-on-surface uppercase" id="input-name" type="text" value="BAMBANG WIJAYA KUSUMA"/>
+</div>
+</div>
+<!-- Tempat Lahir -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Tempat Lahir <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-title-md" data-icon="location_city">location_city</span>
+</div>
+<input class="w-full pl-11 pr-4 py-2.5 text-body-md font-body-md rounded-xl glass-input text-on-surface" type="text" value="Jakarta"/>
+</div>
+</div>
+<!-- Tanggal Lahir -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Tanggal Lahir (YYYY-MM-DD) <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-title-md" data-icon="calendar_month">calendar_month</span>
+</div>
+<input class="w-full pl-11 pr-4 py-2.5 text-body-md font-body-md rounded-xl glass-input text-on-surface" id="input-birthdate" type="date" value="1992-09-28"/>
+</div>
+</div>
+<!-- Jenis Kelamin (Radio Buttons) -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Jenis Kelamin (Administrative Gender) <span class="text-tertiary">*</span>
+</label>
+<div class="grid grid-cols-2 gap-3 pt-1">
+<!-- Laki-laki (Selected) -->
+<label class="flex items-center gap-3 p-2.5 rounded-xl border border-primary/50 bg-primary/5 cursor-pointer ring-1 ring-primary/30">
+<input checked="" class="w-4 h-4 text-primary focus:ring-primary" name="gender" type="radio" value="male"/>
+<span class="text-label-md font-label-md text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-title-md" data-icon="male">male</span>
+                      Laki-laki
+                    </span>
+</label>
+<!-- Perempuan -->
+<label class="flex items-center gap-3 p-2.5 rounded-xl border border-outline-variant/40 bg-white/40 hover:bg-white cursor-pointer transition-colors">
+<input class="w-4 h-4 text-primary focus:ring-primary" name="gender" type="radio" value="female"/>
+<span class="text-label-md font-label-md text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-title-md" data-icon="female">female</span>
+                      Perempuan
+                    </span>
+</label>
+</div>
+</div>
+<!-- Alokasi No. Rekam Medis Otomatis -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Alokasi No. Rekam Medis (Auto-Generated)
+                </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-primary">
+<span class="material-symbols-outlined text-title-md" data-icon="tag">tag</span>
+</div>
+<input class="w-full pl-11 pr-24 py-2.5 text-body-md font-body-md rounded-xl bg-teal-50/60 border border-primary/30 text-primary font-bold tracking-wider" readonly="" type="text" value="RM-00-28-50"/>
+<div class="absolute inset-y-0 right-2 flex items-center">
+<span class="text-label-sm font-label-sm text-primary px-2 py-0.5 rounded bg-primary/10">Terkunci</span>
+</div>
+</div>
+</div>
+<!-- Nomor WhatsApp / Telepon -->
+<div class="md:col-span-2 space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Nomor WhatsApp / Kontak Telepon Pasien <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-title-md" data-icon="call">call</span>
+</div>
+<input class="w-full pl-11 pr-4 py-2.5 text-body-md font-body-md rounded-xl glass-input text-on-surface" id="input-phone" placeholder="Contoh: 081234567890" type="tel" value="+6281288997766"/>
+</div>
+<p class="text-body-sm font-body-sm text-outline">Digunakan untuk konfirmasi antrean klinik, notifikasi e-resep farmasi, dan portal SATUSEHAT.</p>
+</div>
+</div>
+</div>
+<!-- SECTION B: ALAMAT DOMISILI KEPENDUDUKAN -->
+<div class="glass-surface rounded-2xl p-6 md:p-8 space-y-6 border border-white/80">
+<div class="flex items-center justify-between pb-4 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center font-bold">
+                  B
+                </div>
+<div>
+<h2 class="text-title-md font-title-md text-on-surface">Alamat Domisili Kependudukan</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Sesuai data kependudukan wilayah administratif Kemendagri.</p>
+</div>
+</div>
+<button class="text-label-sm font-label-sm text-primary hover:underline flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-body-sm" data-icon="content_copy">content_copy</span>
+                Sesuai Alamat KTP
+              </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Alamat Lengkap -->
+<div class="md:col-span-2 space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Alamat Lengkap (Jalan, RT/RW, No. Rumah) <span class="text-tertiary">*</span>
+</label>
+<textarea class="w-full p-3.5 text-body-md font-body-md rounded-xl glass-input text-on-surface resize-none" id="input-address" rows="2">Jl. Rasuna Said Kav. B-12, RT 004 / RW 002, Karet Kuningan</textarea>
+</div>
+<!-- Provinsi -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Provinsi <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<select class="w-full py-2.5 px-3.5 text-body-md font-body-md rounded-xl glass-input text-on-surface appearance-none bg-no-repeat bg-[right_1rem_center]">
+<option value="31">DKI JAKARTA</option>
+<option value="32">JAWA BARAT</option>
+<option value="33">JAWA TENGAH</option>
+<option value="35">JAWA TIMUR</option>
+<option value="36">BANTEN</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-outline">
+<span class="material-symbols-outlined text-body-md" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Kota / Kabupaten -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Kota / Kabupaten <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<select class="w-full py-2.5 px-3.5 text-body-md font-body-md rounded-xl glass-input text-on-surface appearance-none bg-no-repeat bg-[right_1rem_center]">
+<option value="3171">KOTA ADM. JAKARTA SELATAN</option>
+<option value="3172">KOTA ADM. JAKARTA PUSAT</option>
+<option value="3173">KOTA ADM. JAKARTA BARAT</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-outline">
+<span class="material-symbols-outlined text-body-md" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Kecamatan -->
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                  Kecamatan <span class="text-tertiary">*</span>
+</label>
+<div class="relative">
+<select class="w-full py-2.5 px-3.5 text-body-md font-body-md rounded-xl glass-input text-on-surface appearance-none bg-no-repeat bg-[right_1rem_center]">
+<option value="317105">SETIABUDI</option>
+<option value="317106">TEBET</option>
+<option value="317107">MAMPANG PRAPATAN</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-outline">
+<span class="material-symbols-outlined text-body-md" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Kelurahan & Kode Pos -->
+<div class="grid grid-cols-2 gap-3">
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                    Kelurahan <span class="text-tertiary">*</span>
+</label>
+<input class="w-full py-2.5 px-3 text-body-md font-body-md rounded-xl glass-input text-on-surface" type="text" value="Karet Kuningan"/>
+</div>
+<div class="space-y-2">
+<label class="block text-label-lg font-label-lg text-on-surface">
+                    Kode Pos <span class="text-tertiary">*</span>
+</label>
+<input class="w-full py-2.5 px-3 text-body-md font-body-md rounded-xl glass-input text-on-surface font-mono" maxlength="5" type="text" value="12940"/>
+</div>
+</div>
+</div>
+</div>
+<!-- BOTTOM WORKFLOW ACTIONS -->
+<div class="glass-surface rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4 border border-white/80">
+<div class="flex items-center gap-2 text-outline text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-title-md text-primary" data-icon="lock">lock</span>
+<span>Data terenkripsi TLS 1.3 &amp; mematuhi UU PDP No. 27/2022.</span>
+</div>
+<div class="flex items-center gap-3">
+<!-- Secondary Glass Cancel Button -->
+<button class="px-5 py-2.5 rounded-xl border border-outline-variant/60 bg-white/70 hover:bg-white text-on-surface font-label-lg transition-all" type="button">
+                Batal
+              </button>
+<!-- Primary Glowing Teal Action Button -->
+<button class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-lg teal-glow hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center gap-2" id="btn-submit" type="button">
+<span class="material-symbols-outlined text-title-md" data-icon="how_to_reg">how_to_reg</span>
+<span>Simpan &amp; Terbitkan No. RM</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT 4 COLS: Real-time SATUSEHAT FHIR Mapping Inspector -->
+<div class="lg:col-span-4 space-y-6">
+<!-- SUMMARY CARD: Live FHIR Patient Payload -->
+<div class="glass-surface rounded-2xl p-6 space-y-5 border border-white/80 sticky top-24">
+<!-- Inspector Header -->
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-teal-500/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-title-md" data-icon="data_object">data_object</span>
+</div>
+<div>
+<h3 class="text-title-md font-title-md text-on-surface">Preview Identitas SATUSEHAT</h3>
+<span class="text-label-sm font-label-sm text-outline">FHIR R4 Patient Spec JSON</span>
+</div>
+</div>
+<!-- Copy Payload Button -->
+<button class="p-1.5 rounded-lg bg-white/80 hover:bg-white border border-outline-variant/30 text-on-surface-variant hover:text-primary transition-all shadow-sm" id="copy-payload-btn" title="Salin JSON Payload" type="button">
+<span class="material-symbols-outlined text-body-md" data-icon="copy_all">copy_all</span>
+</button>
+</div>
+<!-- Patient Quick Identifier Summary -->
+<div class="space-y-3 bg-surface-container-low/60 rounded-xl p-3.5 border border-outline-variant/20">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-outline">Status IHS ID (National):</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-emerald-100/70 text-emerald-800 border border-emerald-300/50">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  IHS Match (10002849201)
+                </span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-outline">Target Endpoint:</span>
+<span class="text-label-sm font-mono text-primary font-semibold">/fhir-r4/v1/Patient</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-outline">Profil Validasi:</span>
+<span class="text-label-sm font-mono text-on-surface">kemenkes.id/fhir/Patient</span>
+</div>
+</div>
+<!-- Real-time formatted JSON Code Box -->
+<div class="relative rounded-xl overflow-hidden bg-slate-900 text-slate-100 shadow-inner text-xs font-mono">
+<!-- Terminal Header Bar -->
+<div class="flex items-center justify-between px-3 py-2 bg-slate-800/90 border-b border-slate-700/50">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+<span class="text-[11px] text-slate-400 ml-2 font-mono">patient-resource.json</span>
+</div>
+<span class="text-[10px] text-teal-400 tracking-wider">LIVE MAPPING</span>
+</div>
+<!-- JSON Body -->
+<pre class="p-3.5 overflow-x-auto text-[11px] leading-relaxed max-h-72"><code class="text-slate-200">{
+  <span class="text-teal-400">"resourceType"</span>: <span class="text-emerald-300">"Patient"</span>,
+  <span class="text-teal-400">"id"</span>: <span class="text-amber-300">"10002849201"</span>,
+  <span class="text-teal-400">"identifier"</span>: [
+    {
+      <span class="text-teal-400">"system"</span>: <span class="text-emerald-300">"https://fhir.kemkes.go.id/id/nik"</span>,
+      <span class="text-teal-400">"value"</span>: <span class="text-amber-300">"3171052809920003"</span>
+    },
+    {
+      <span class="text-teal-400">"system"</span>: <span class="text-emerald-300">"http://sys-ids.rs-sehat.id/mrn"</span>,
+      <span class="text-teal-400">"value"</span>: <span class="text-amber-300">"RM-00-28-50"</span>
+    }
+  ],
+  <span class="text-teal-400">"name"</span>: [{
+    <span class="text-teal-400">"use"</span>: <span class="text-emerald-300">"official"</span>,
+    <span class="text-teal-400">"text"</span>: <span class="text-amber-300">"BAMBANG WIJAYA KUSUMA"</span>
+  }],
+  <span class="text-teal-400">"gender"</span>: <span class="text-emerald-300">"male"</span>,
+  <span class="text-teal-400">"birthDate"</span>: <span class="text-emerald-300">"1992-09-28"</span>,
+  <span class="text-teal-400">"telecom"</span>: [{
+    <span class="text-teal-400">"system"</span>: <span class="text-emerald-300">"phone"</span>,
+    <span class="text-teal-400">"value"</span>: <span class="text-amber-300">"+6281288997766"</span>
+  }],
+  <span class="text-teal-400">"address"</span>: [{
+    <span class="text-teal-400">"line"</span>: [<span class="text-amber-300">"Jl. Rasuna Said Kav. B-12"</span>],
+    <span class="text-teal-400">"city"</span>: <span class="text-amber-300">"Jakarta Selatan"</span>,
+    <span class="text-teal-400">"postalCode"</span>: <span class="text-amber-300">"12940"</span>
+  }]
+}</code></pre>
+</div>
+<!-- Interoperability Verification Checklist -->
+<div class="space-y-2 pt-2">
+<span class="text-label-sm font-label-sm text-outline block">Status Integritas Schema</span>
+<div class="space-y-1.5 text-body-sm font-body-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-body-md" data-icon="check">check</span>
+                    NIK 16 Digit Format
+                  </span>
+<span class="text-label-sm font-label-sm text-emerald-700 font-semibold">Valid</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-body-md" data-icon="check">check</span>
+                    FHIR ISO 8601 BirthDate
+                  </span>
+<span class="text-label-sm font-label-sm text-emerald-700 font-semibold">Sesuai</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-body-md" data-icon="check">check</span>
+                    Kode Wilayah Kemendagri
+                  </span>
+<span class="text-label-sm font-label-sm text-emerald-700 font-semibold">Terdaftar</span>
+</div>
+</div>
+</div>
+<!-- Action Prompt in Summary Card -->
+<div class="pt-2 border-t border-outline-variant/30">
+<button class="w-full py-2 px-3 rounded-xl bg-surface-container-high/60 hover:bg-surface-container text-primary font-label-md transition-colors flex items-center justify-center gap-1.5 text-center" type="button">
+<span class="material-symbols-outlined text-body-md" data-icon="open_in_new">open_in_new</span>
+                Buka SATUSEHAT Testbed Inspector
+              </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- FLOATING GLASS NOTIFICATION TOAST (Modals/Alerts preview) -->
+<aside aria-live="polite" class="fixed bottom-6 right-6 z-50 transition-all duration-300 transform translate-y-0 opacity-100" id="success-toast">
+<div class="glass-surface px-5 py-3.5 rounded-2xl border border-emerald-200/80 shadow-2xl flex items-center gap-3.5 ring-1 ring-emerald-500/20 max-w-md">
+<div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-title-md" data-icon="cloud_done" data-weight="fill" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+</div>
+<div class="space-y-0.5">
+<p class="text-label-md font-label-md text-on-surface">Data Pasien Berhasil Disimpan</p>
+<p class="text-body-sm font-body-sm text-outline">Terpetakan ke SATUSEHAT Patient (IHS: 10002849201)</p>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded-lg transition-colors ml-2" onclick="document.getElementById('success-toast').style.display='none'" title="Tutup Pesan" type="button">
+<span class="material-symbols-outlined text-body-md" data-icon="close">close</span>
+</button>
+</div>
+</aside>
+<!-- MICRO-INTERACTION SCRIPT -->
+<script>
+    // Copy payload notification micro-interaction
+    const copyBtn = document.getElementById('copy-payload-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const originalIcon = copyBtn.innerHTML;
+        copyBtn.innerHTML = `<span class="material-symbols-outlined text-body-md text-emerald-600" data-icon="check">check</span>`;
+        setTimeout(() => {
+          copyBtn.innerHTML = originalIcon;
+        }, 1800);
+      });
+    }
+
+    // Submit button feedback
+    const submitBtn = document.getElementById('btn-submit');
+    const toast = document.getElementById('success-toast');
+    if (submitBtn && toast) {
+      submitBtn.addEventListener('click', () => {
+        toast.style.display = 'flex';
+        toast.classList.remove('translate-y-8', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        
+        // Auto pulse animation on button
+        submitBtn.classList.add('scale-95');
+        setTimeout(() => submitBtn.classList.remove('scale-95'), 150);
+      });
+    }
+  </script>
+</body></html>
