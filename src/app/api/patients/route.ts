@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 // POST: Resepsionis/Admin Input Pasien Baru (Cek RBAC Role)
 export async function POST(request: Request) {
   const body = await request.json();
-  const { nik, full_name, dob, gender, address, role } = body;
+  const { nik, full_name, dob, gender, address, phone, marital_status, role } = body;
 
   // RBAC: Hanya 'resepsionis' atau 'admin' yang boleh registrasi pasien
   if (role !== 'resepsionis' && role !== 'admin') {
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   }
 
   // FHIR Patient Resource
-  const fhir_data = {
+  const fhir_data: any = {
     resourceType: "Patient",
     identifier: [{ system: "https://fhir.kemkes.go.id/id/nik", value: nik }],
     name: [{ use: "official", text: full_name }],
@@ -54,9 +54,24 @@ export async function POST(request: Request) {
     address: [{ text: address }]
   };
 
+  if (phone) {
+    fhir_data.telecom = [{ system: "phone", value: phone, use: "mobile" }];
+  }
+
+  if (marital_status) {
+    // Basic mapping for marital status
+    fhir_data.maritalStatus = {
+      coding: [{
+        system: "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
+        code: marital_status.charAt(0).toUpperCase(),
+        display: marital_status
+      }]
+    };
+  }
+
   const { data, error } = await supabase
     .from('patients')
-    .insert([{ nik, full_name, dob, gender, address, fhir_data }])
+    .insert([{ nik, full_name, dob, gender, address, phone, marital_status, fhir_data }])
     .select();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

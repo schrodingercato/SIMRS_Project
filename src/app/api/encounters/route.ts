@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 // POST: Resepsionis/Admin Pendaftaran Kunjungan (Cek RBAC Role)
 export async function POST(request: Request) {
   const body = await request.json();
-  const { patient_id, doctor_id, polyclinic, role } = body;
+  const { patient_id, doctor_id, polyclinic, room_number, estimated_time, role } = body;
 
   // RBAC: Hanya 'resepsionis' atau 'admin' yang boleh daftar kunjungan
   if (role !== 'resepsionis' && role !== 'admin') {
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   }
 
   // FHIR Encounter Resource
-  const fhir_data = {
+  const fhir_data: any = {
     resourceType: "Encounter",
     status: "planned",
     class: {
@@ -64,13 +64,17 @@ export async function POST(request: Request) {
       individual: { reference: `Practitioner/${doctor_id}` }
     }] : [],
     location: [{
-      location: { display: polyclinic }
+      location: { display: polyclinic + (room_number ? ` - ${room_number}` : '') }
     }]
   };
 
+  if (estimated_time) {
+    fhir_data.period = { start: estimated_time };
+  }
+
   const { data, error } = await supabase
     .from('encounters')
-    .insert([{ patient_id, doctor_id, polyclinic, status: 'Planned', fhir_data }])
+    .insert([{ patient_id, doctor_id, polyclinic, room_number, estimated_time, status: 'Planned', fhir_data }])
     .select();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

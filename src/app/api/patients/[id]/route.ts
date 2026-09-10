@@ -21,7 +21,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 // PUT: Update Data Pasien (Cek RBAC Role)
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   const body = await request.json();
-  const { full_name, dob, gender, address, role } = body;
+  const { full_name, dob, gender, address, phone, marital_status, role } = body;
 
   // RBAC: Hanya 'resepsionis' atau 'admin' yang boleh update demografi
   if (role !== 'resepsionis' && role !== 'admin') {
@@ -45,10 +45,20 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   if (gender) fhir_data.gender = gender;
   if (dob) fhir_data.birthDate = dob;
   if (address) fhir_data.address = [{ text: address }];
+  if (phone) fhir_data.telecom = [{ system: "phone", value: phone, use: "mobile" }];
+  if (marital_status) {
+    fhir_data.maritalStatus = {
+      coding: [{
+        system: "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
+        code: marital_status.charAt(0).toUpperCase(),
+        display: marital_status
+      }]
+    };
+  }
 
   const { data, error } = await supabase
     .from('patients')
-    .update({ full_name, dob, gender, address, fhir_data })
+    .update({ full_name, dob, gender, address, phone, marital_status, fhir_data })
     .eq('id', params.id)
     .select();
 

@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS public.patients (
     dob DATE NOT NULL,
     gender VARCHAR(20) NOT NULL CHECK (gender IN ('male', 'female', 'other', 'unknown')),
     address TEXT NOT NULL,
+    phone VARCHAR(50),
+    marital_status VARCHAR(50),
     fhir_data JSONB, -- Standar penyimpanan FHIR
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -22,6 +24,8 @@ CREATE TABLE IF NOT EXISTS public.encounters (
     polyclinic VARCHAR(100) NOT NULL,
     status VARCHAR(50) NOT NULL CHECK (status IN ('Planned', 'Arrived', 'In-progress', 'Finished')),
     arrival_time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    room_number VARCHAR(50),
+    estimated_time TIMESTAMP WITH TIME ZONE,
     fhir_data JSONB, -- Standar penyimpanan FHIR
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
