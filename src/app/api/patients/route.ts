@@ -1,0 +1,64 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// GET: Ambil Data Pasien
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const nik = searchParams.get('nik');
+
+  let query = supabase.from('patients').select('*');
+  
+  if (nik) {
+    query = query.eq('nik', nik);
+  }
+
+  const { data, error } = await query;
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ data });
+}
+
+// POST: Resepsionis/Admin Input Pasien Baru (Cek RBAC Role)
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { nik, full_name, dob, gender, address, role } = body;
+
+  // RBAC: Hanya 'resepsionis' atau 'admin' yang boleh registrasi pasien
+  if (role !== 'resepsionis' && role !== 'admin') {
+    return NextResponse.json(
+      { error: 'Akses Ditolak: Hanya Admin atau Resepsionis yang dapat registrasi pasien.' },
+      { status: 403 }
+    );
+  }
+
+  // Validasi manual NIK 16 digit (mengikuti pola tanpa Zod)
+  if (!nik || nik.length !== 16 || !/^\d+$/.test(nik)) {
+    return NextResponse.json(
+      { error: 'Validasi Gagal: NIK harus berupa 16 digit angka.' },
+      { status: 400 }
+    );
+  }
+
+  // FHIR Patient Resource
+  const fhir_data = {
+    resourceType: "Patient",
+    identifier: [{ system: "https://fhir.kemkes.go.id/id/nik", value: nik }],
+    name: [{ use: "official", text: full_name }],
+    gender: gender,
+    birthDate: dob,
+    address: [{ text: address }]
+  };
+
+  const { data, error } = await supabase
+    .from('patients')
+    .insert([{ nik, full_name, dob, gender, address, fhir_data }])
+    .select();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ message: 'Registrasi demografi pasien berhasil', data });
+}
