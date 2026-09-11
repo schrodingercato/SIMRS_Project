@@ -46,7 +46,7 @@ ON public.patients FOR SELECT USING (true);
 CREATE POLICY "Enable insert for admin and resepsionis on patients"
 ON public.patients FOR INSERT
 WITH CHECK (
-    auth.jwt()->>'role' IN ('admin', 'resepsionis')
+    (auth.jwt()->'user_metadata'->>'role') IN ('itadmin', 'front')
 );
 
 -- Policy untuk Encounters:
@@ -58,12 +58,12 @@ ON public.encounters FOR SELECT USING (true);
 CREATE POLICY "Enable insert for admin and resepsionis on encounters"
 ON public.encounters FOR INSERT
 WITH CHECK (
-    auth.jwt()->>'role' IN ('admin', 'resepsionis')
+    (auth.jwt()->'user_metadata'->>'role') IN ('itadmin', 'front')
 );
 
 -- Hanya dokter/perawat atau admin yang bisa update status kunjungan
 CREATE POLICY "Enable update for encounters"
 ON public.encounters FOR UPDATE
 USING (
-    auth.jwt()->>'role' IN ('admin', 'resepsionis', 'dokter', 'perawat')
+    (auth.jwt()->'user_metadata'->>'role') IN ('itadmin', 'front', 'dpjp', 'nurse')
 );

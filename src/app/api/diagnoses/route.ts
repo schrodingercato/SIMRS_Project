@@ -11,8 +11,8 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { patient_id, icd10_code, description, doctor_id, role } = body;
 
-  // RBAC: Hanya 'dokter' yang boleh isi diagnosa
-  if (role !== 'dokter') {
+  // RBAC: Hanya 'dokter'/'dpjp' atau 'admin'/'itadmin' yang boleh isi diagnosa
+  if (role !== 'dokter' && role !== 'dpjp' && role !== 'admin' && role !== 'itadmin') {
     return NextResponse.json(
       { error: 'Akses Ditolak: Hanya Dokter yang dapat mengisi diagnosa.' },
       { status: 403 }

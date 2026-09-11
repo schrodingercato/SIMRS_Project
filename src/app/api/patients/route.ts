@@ -28,10 +28,10 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { nik, full_name, dob, gender, address, phone, marital_status, role } = body;
 
-  // RBAC: Hanya 'resepsionis' atau 'admin' yang boleh registrasi pasien
-  if (role !== 'resepsionis' && role !== 'admin') {
+  // RBAC: Hanya 'resepsionis', 'front', atau 'admin'/'itadmin' yang boleh registrasi pasien
+  if (role !== 'resepsionis' && role !== 'front' && role !== 'admin' && role !== 'itadmin') {
     return NextResponse.json(
-      { error: 'Akses Ditolak: Hanya Admin atau Resepsionis yang dapat registrasi pasien.' },
+      { error: 'Akses Ditolak: Hanya Admin atau Petugas Pendaftaran yang dapat registrasi pasien.' },
       { status: 403 }
     );
   }

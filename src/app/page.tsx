@@ -14,8 +14,8 @@ const ROLE_DASHBOARD: Record<string, string> = {
   dpjp:    '/dashboard/dokter',
   nurse:   '/dashboard/perawat',
   pharma:  '/dashboard/farmasi',
-  front:   '/dashboard',
-  itadmin: '/dashboard',
+  front:   '/dashboard/pendaftaran',
+  itadmin: '/dashboard/itadmin',
 };
 
 type Role = 'dpjp' | 'nurse' | 'pharma' | 'front' | 'itadmin';
