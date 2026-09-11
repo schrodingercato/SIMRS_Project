@@ -1,18 +1,58 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar, TopBar, playDingDongBell } from '../components';
 
 export default function DokterDashboard() {
   const router = useRouter();
 
-  const [patients, setPatients] = useState([
-    { no: 'A-017', name: 'Nurul Mayasari', rm: 'RM-2025-08413', age: '32 Thn', gender: 'P', waktu: '08:30 WIB', status: 'Finished', alergi: null, asuransi: 'BPJS Kesehatan' },
-    { no: 'A-018', name: 'Budi Santoso',   rm: 'RM-2025-08942', age: '35 Thn', gender: 'L', waktu: '08:45 WIB', status: 'In-progress', alergi: 'PENISILIN', asuransi: 'Mandiri/Umum' },
-    { no: 'A-019', name: 'Ahmad Fauzi',    rm: 'RM-2025-08939', age: '43 Thn', gender: 'L', waktu: '09:00 WIB', status: 'Arrived', alergi: null, asuransi: 'BPJS Kesehatan' },
-    { no: 'A-020', name: 'Dewi Wulandari', rm: 'RM-2025-08415', age: '24 Thn', gender: 'P', waktu: '09:15 WIB', status: 'Arrived', alergi: null, asuransi: 'Asuransi Swasta' },
-  ]);
+  const [dbPatients, setDbPatients] = useState<any[]>([]);
+
+  const defaultMockPatients = [
+    { id: '1', no: 'A-017', name: 'Nurul Mayasari', rm: 'RM-2025-08413', age: '32 Thn', gender: 'P', waktu: '08:30 WIB', status: 'Finished', alergi: null, asuransi: 'BPJS Kesehatan' },
+    { id: '2', no: 'A-018', name: 'Budi Santoso',   rm: 'RM-2025-08942', age: '35 Thn', gender: 'L', waktu: '08:45 WIB', status: 'In-progress', alergi: 'PENISILIN', asuransi: 'Mandiri/Umum' },
+    { id: '3', no: 'A-019', name: 'Ahmad Fauzi',    rm: 'RM-2025-08939', age: '43 Thn', gender: 'L', waktu: '09:00 WIB', status: 'Arrived', alergi: null, asuransi: 'BPJS Kesehatan' },
+    { id: '4', no: 'A-020', name: 'Dewi Wulandari', rm: 'RM-2025-08415', age: '24 Thn', gender: 'P', waktu: '09:15 WIB', status: 'Arrived', alergi: null, asuransi: 'Asuransi Swasta' },
+  ];
+
+  const fetchPatients = async () => {
+    try {
+      const res = await fetch('/api/patients');
+      const json = await res.json();
+      if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+        const mapped = json.data.map((p: any, index: number) => ({
+          id: p.id,
+          no: `A-0${index + 21}`,
+          name: p.full_name,
+          rm: `RM-2026-${(p.nik || '00000').slice(-5)}`,
+          age: p.dob ? `${new Date().getFullYear() - new Date(p.dob).getFullYear()} Thn` : '30 Thn',
+          gender: p.gender === 'male' ? 'L' : 'P',
+          waktu: '09:30 WIB',
+          status: index === 0 ? 'Arrived' : 'Arrived',
+          alergi: null,
+          asuransi: 'BPJS Kesehatan',
+        }));
+        setDbPatients(mapped);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPatients();
+    const interval = setInterval(fetchPatients, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const patientsList = dbPatients.length > 0 ? [...dbPatients, ...defaultMockPatients] : defaultMockPatients;
+
+  const [patients, setPatients] = useState<any[]>(patientsList);
+
+  useEffect(() => {
+    setPatients(patientsList);
+  }, [dbPatients]);
 
   const [filterStatus, setFilterStatus] = useState('Semua Status');
   const [showLabModal, setShowLabModal] = useState(false);
@@ -58,6 +98,10 @@ export default function DokterDashboard() {
               </div>
             </div>
             <div className="flex gap-2">
+              <button onClick={fetchPatients} className="px-3.5 py-2 rounded-xl border border-[#bcc9c6]/40 text-[#006194] font-bold text-[0.75rem] hover:bg-white flex items-center gap-1">
+                <span className="material-symbols-outlined text-[0.9rem]">refresh</span>
+                Refresh Data Pasien Realtime
+              </button>
               <button className="px-3.5 py-2 rounded-xl text-[0.75rem] font-bold text-white bg-[#006194] shadow-sm">DPJP Poli</button>
               <button onClick={() => router.push('/dashboard/perawat')}
                 className="px-3.5 py-2 rounded-xl text-[0.75rem] font-semibold border border-[#bcc9c6]/40 text-[#3d4947] hover:bg-white transition-colors flex items-center gap-1">
@@ -77,7 +121,7 @@ export default function DokterDashboard() {
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Total Pasien Poli', value: patients.length.toString(), sub: 'Target 30/hari', icon: 'groups', color: '#006194' },
+              { label: 'Total Pasien Poli Realtime', value: patients.length.toString(), sub: 'Tersambung Supabase DB', icon: 'groups', color: '#006194' },
               { label: 'Pasien Menunggu', value: patients.filter(p=>p.status==='Arrived').length.toString(), sub: '~14 mnt/pasien', icon: 'hourglass_top', color: '#e57c00', warn: true },
               { label: 'Sedang Diperiksa', value: 'A-018', sub: 'Budi Santoso • Aktif 18 mnt', icon: 'person_check', color: '#00685f' },
               { label: 'Pemeriksaan Selesai', value: patients.filter(p=>p.status==='Finished').length.toString(), sub: 'Konsultasi Beres', icon: 'task_alt', color: '#16a34a' },
@@ -110,7 +154,7 @@ export default function DokterDashboard() {
                       <option value="In-progress">In-progress (Periksa)</option>
                       <option value="Finished">Finished (Selesai)</option>
                     </select>
-                    <button onClick={() => setFilterStatus('Semua Status')} className="p-1.5 rounded-lg border border-[#bcc9c6]/40 hover:bg-white transition-colors" title="Refresh">
+                    <button onClick={fetchPatients} className="p-1.5 rounded-lg border border-[#bcc9c6]/40 hover:bg-white transition-colors" title="Refresh">
                       <span className="material-symbols-outlined text-[1rem] text-[#6d7a77]">refresh</span>
                     </button>
                   </div>
@@ -130,7 +174,7 @@ export default function DokterDashboard() {
                         const sc = statusColor[p.status] ?? { text: '#6d7a77', bg: '#f3f4f6' };
                         const isActive = p.status === 'In-progress';
                         return (
-                          <tr key={p.no} className={`border-b border-[#bcc9c6]/10 transition-colors ${isActive ? 'bg-blue-50/40' : 'hover:bg-[#eaedff]/20'}`}>
+                          <tr key={p.id || p.no} className={`border-b border-[#bcc9c6]/10 transition-colors ${isActive ? 'bg-blue-50/40' : 'hover:bg-[#eaedff]/20'}`}>
                             <td className="px-4 py-3 font-black text-[1rem]" style={{ color: isActive ? '#006398' : '#131b2e' }}>{p.no}</td>
                             <td className="px-4 py-3">
                               <div className="font-semibold text-[#131b2e] flex items-center gap-1.5">

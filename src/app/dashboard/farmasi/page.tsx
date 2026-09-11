@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar, TopBar, useCurrentUser } from '../components';
 
@@ -8,12 +8,49 @@ export default function FarmasiDashboard() {
   const router = useRouter();
   const { userProfile } = useCurrentUser();
 
-  const [resepList, setResepList] = useState([
+  const [dbPatients, setDbPatients] = useState<any[]>([]);
+
+  const defaultMockResep = [
     { id: 'R-101', noRm: 'RM-2025-08942', patientName: 'Budi Santoso', doctor: 'dr. Adrian Wijaya, Sp.PD', obat: 'Paracetamol 500mg #X (3x1), Amoxicillin 500mg #XV (3x1 p.c)', status: 'Menunggu Racik', alert: 'Alergi Penisilin (Cek Ulang!)' },
     { id: 'R-102', noRm: 'RM-2025-08939', patientName: 'Ahmad Fauzi', doctor: 'dr. Adrian Wijaya, Sp.PD', obat: 'Omeprazole 20mg #X (2x1 a.c), Sucralfate Syr #I (3x1 C)', status: 'Sedang Diracik', alert: null },
     { id: 'R-103', noRm: 'RM-2025-08415', patientName: 'Dewi Wulandari', doctor: 'dr. Siti Aminah, Sp.A', obat: 'Cefadroxil Syr #I (3x1 CTH), Paracetamol Syr #I (prn)', status: 'Siap Ambil', alert: null },
     { id: 'R-104', noRm: 'RM-2025-08413', patientName: 'Siti Rahmawati', doctor: 'dr. Hendra Wijaya, Sp.PD', obat: 'Amlodipine 10mg #XXX (1x1), Metformin 500mg #LX (2x1)', status: 'Selesai', alert: null },
-  ]);
+  ];
+
+  const fetchPatients = async () => {
+    try {
+      const res = await fetch('/api/patients');
+      const json = await res.json();
+      if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+        const mapped = json.data.map((p: any, index: number) => ({
+          id: `R-20${index + 1}`,
+          noRm: `RM-2026-${(p.nik || '00000').slice(-5)}`,
+          patientName: p.full_name,
+          doctor: 'dr. Adrian Wijaya, Sp.PD',
+          obat: 'Amlodipine 10mg #XXX (1x1), Paracetamol 500mg #X (3x1)',
+          status: 'Menunggu Racik',
+          alert: null,
+        }));
+        setDbPatients(mapped);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPatients();
+    const interval = setInterval(fetchPatients, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fullResepList = dbPatients.length > 0 ? [...dbPatients, ...defaultMockResep] : defaultMockResep;
+
+  const [resepList, setResepList] = useState<any[]>(fullResepList);
+
+  useEffect(() => {
+    setResepList(fullResepList);
+  }, [dbPatients]);
 
   const [toast, setToast] = useState<string | null>(null);
   const [showEtiketModal, setShowEtiketModal] = useState(false);
@@ -69,10 +106,10 @@ export default function FarmasiDashboard() {
                 </div>
               </div>
             </div>
-            <div className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-xl text-[0.75rem] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200">
-              <span className="material-symbols-outlined text-[1rem]">verified</span>
-              Skrining Interaksi Obat Automatic On
-            </div>
+            <button onClick={fetchPatients} className="px-3.5 py-2.5 rounded-xl border border-indigo-200 text-indigo-700 font-bold text-[0.8rem] hover:bg-indigo-50 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[1rem]">refresh</span>
+              Refresh E-Resep Realtime
+            </button>
           </div>
 
           {toast && (
@@ -85,7 +122,7 @@ export default function FarmasiDashboard() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'E-Resep Masuk Hari Ini', value: '48', sub: 'Dari Poliklinik & IGD', icon: 'description', color: '#4f46e5' },
+              { label: 'E-Resep Masuk Realtime', value: resepList.length.toString(), sub: 'Dari Poliklinik & IGD', icon: 'description', color: '#4f46e5' },
               { label: 'Sedang Diracik Depo', value: resepList.filter(r=>r.status==='Sedang Diracik').length.toString(), sub: 'Waktu racik ~8 menit', icon: 'hourglass_top', color: '#e57c00', warn: true },
               { label: 'Siap Diserahkan', value: resepList.filter(r=>r.status==='Siap Ambil').length.toString(), sub: 'Siap panggil di Loket Farmasi', icon: 'task_alt', color: '#16a34a' },
               { label: 'Stok Obat Kritis', value: inventory.filter(i=>i.status==='Kritis').length.toString() + ' Item', sub: 'Perlu restock segera', icon: 'warning', color: '#ba0035', warn: true },

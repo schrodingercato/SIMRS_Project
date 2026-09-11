@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar, TopBar, useCurrentUser, playDingDongBell } from '../components';
 
@@ -8,10 +8,14 @@ export default function PerawatDashboard() {
   const router = useRouter();
   const { userProfile } = useCurrentUser();
 
+  // Patients State from DB
+  const [dbPatients, setDbPatients] = useState<any[]>([]);
+  const [loadingPatients, setLoadingPatients] = useState(true);
+
   // Vital Signs Form State
   const [vitals, setVitals] = useState({
-    patient_id: '1',
-    patient_name: 'Budi Santoso (RM-2025-08942)',
+    patient_id: '',
+    patient_name: '',
     blood_pressure: '120/80',
     heart_rate: '82',
     temperature: '36.6',
@@ -33,12 +37,66 @@ export default function PerawatDashboard() {
     recommendation: 'Lanjutkan observasi TTV per 4 jam, konsul DPJP untuk penyesuaian dosis Amlodipine.',
   });
 
-  const mockTriagePatients = [
-    { no: 'T-001', rm: 'RM-2025-08942', name: 'Budi Santoso', age: '35 Thn', triase: 'Kuning', td: '135/85', hr: '92 bpm', temp: '37.8 °C', spo2: '97%', status: 'Menunggu DPJP', cito: false },
-    { no: 'T-002', rm: 'RM-2025-08939', name: 'Djoko Wahyudi', age: '69 Thn', triase: 'Merah (CITO)', td: '170/105', hr: '110 bpm', temp: '38.5 °C', spo2: '91%', status: 'Triase CITO IGD', cito: true },
-    { no: 'T-003', rm: 'RM-2025-08415', name: 'Dewi Wulandari', age: '24 Thn', triase: 'Hijau', td: '115/75', hr: '76 bpm', temp: '36.5 °C', spo2: '99%', status: 'Observasi Bangsal', cito: false },
-    { no: 'T-004', rm: 'RM-2025-08413', name: 'Siti Rahmawati', age: '38 Thn', triase: 'Hijau', td: '120/80', hr: '80 bpm', temp: '36.7 °C', spo2: '98%', status: 'Selesai TTV', cito: false },
+  // Quick Add Patient Modal State
+  const [showAddPatientModal, setShowAddPatientModal] = useState(false);
+  const [newPatientName, setNewPatientName] = useState('');
+  const [newPatientNik, setNewPatientNik] = useState('');
+  const [addingPatient, setAddingPatient] = useState(false);
+
+  const defaultMockPatients = [
+    { id: '1', no: 'T-001', rm: 'RM-2025-08942', name: 'Budi Santoso', age: '35 Thn', triase: 'Kuning', td: '135/85', hr: '92 bpm', temp: '37.8 °C', spo2: '97%', status: 'Menunggu DPJP', cito: false },
+    { id: '2', no: 'T-002', rm: 'RM-2025-08939', name: 'Djoko Wahyudi', age: '69 Thn', triase: 'Merah (CITO)', td: '170/105', hr: '110 bpm', temp: '38.5 °C', spo2: '91%', status: 'Triase CITO IGD', cito: true },
+    { id: '3', no: 'T-003', rm: 'RM-2025-08415', name: 'Dewi Wulandari', age: '24 Thn', triase: 'Hijau', td: '115/75', hr: '76 bpm', temp: '36.5 °C', spo2: '99%', status: 'Observasi Bangsal', cito: false },
+    { id: '4', no: 'T-004', rm: 'RM-2025-08413', name: 'Siti Rahmawati', age: '38 Thn', triase: 'Hijau', td: '120/80', hr: '80 bpm', temp: '36.7 °C', spo2: '98%', status: 'Selesai TTV', cito: false },
   ];
+
+  const fetchPatients = async () => {
+    setLoadingPatients(true);
+    try {
+      const res = await fetch('/api/patients');
+      const json = await res.json();
+      if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+        const mapped = json.data.map((p: any, index: number) => ({
+          id: p.id,
+          no: `T-0${index + 10}`,
+          rm: `RM-2026-${(p.nik || '00000').slice(-5)}`,
+          name: p.full_name,
+          age: p.dob ? `${new Date().getFullYear() - new Date(p.dob).getFullYear()} Thn` : '30 Thn',
+          triase: index % 3 === 0 ? 'Merah (CITO)' : index % 2 === 0 ? 'Kuning' : 'Hijau',
+          td: '120/80',
+          hr: '82 bpm',
+          temp: '36.6 °C',
+          spo2: '98%',
+          status: 'Menunggu Input TTV',
+          cito: index % 3 === 0,
+        }));
+
+        setDbPatients(mapped);
+        setVitals(v => {
+          if (!v.patient_id && mapped[0]) {
+            return {
+              ...v,
+              patient_id: mapped[0].id,
+              patient_name: `${mapped[0].name} (${mapped[0].rm})`,
+            };
+          }
+          return v;
+        });
+      }
+    } catch (err) {
+      console.error('Failed to fetch patients in perawat dashboard:', err);
+    } finally {
+      setLoadingPatients(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPatients();
+    const interval = setInterval(fetchPatients, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const displayPatients = dbPatients.length > 0 ? [...dbPatients, ...defaultMockPatients] : defaultMockPatients;
 
   const handleSaveVitals = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,11 +104,13 @@ export default function PerawatDashboard() {
     setToast(null);
 
     try {
+      const targetId = vitals.patient_id || displayPatients[0]?.id || '1';
+
       const res = await fetch('/api/vital-signs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          patient_id: vitals.patient_id,
+          patient_id: targetId,
           blood_pressure: vitals.blood_pressure,
           heart_rate: vitals.heart_rate,
           temperature: vitals.temperature,
@@ -61,7 +121,8 @@ export default function PerawatDashboard() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Gagal menyimpan TTV');
 
-      setToast(`Tanda-Tanda Vital (TTV) berhasil disimpan & disinkronkan ke SATUSEHAT!`);
+      playDingDongBell();
+      setToast(`Tanda-Tanda Vital & SpO2 (${vitals.spo2}%) untuk ${vitals.patient_name || 'Pasien'} berhasil disimpan & disinkronkan ke SATUSEHAT!`);
       setTimeout(() => setToast(null), 4000);
     } catch (err: any) {
       setToast(`Error: ${err.message}`);
@@ -79,6 +140,38 @@ export default function PerawatDashboard() {
     setShowSbarModal(false);
     setToast(`Catatan SBAR Keperawatan untuk ${selectedPatientSbar?.name} berhasil disimpan ke Rekam Medis.`);
     setTimeout(() => setToast(null), 4000);
+  };
+
+  const handleQuickAddPatient = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPatientName) return;
+    setAddingPatient(true);
+    try {
+      const res = await fetch('/api/patients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: newPatientName,
+          nik: newPatientNik || '3171' + String(Date.now()).slice(-12),
+          dob: '1995-05-15',
+          gender: 'female',
+          role: 'resepsionis',
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Gagal menambahkan pasien');
+      
+      playDingDongBell();
+      setToast(`Pasien ${newPatientName} berhasil ditambahkan ke Supabase & SATUSEHAT!`);
+      setNewPatientName('');
+      setNewPatientNik('');
+      setShowAddPatientModal(false);
+      fetchPatients();
+    } catch (err: any) {
+      setToast(`Error: ${err.message}`);
+    } finally {
+      setAddingPatient(false);
+    }
   };
 
   return (
@@ -106,14 +199,24 @@ export default function PerawatDashboard() {
                 </div>
               </div>
             </div>
-            <button onClick={() => {
-              playDingDongBell();
-              setToast('🔔 MEMANGGIL TIM TRIASE CITO IGD DARURAT!');
-            }} className="px-4 py-2.5 rounded-xl text-white font-bold text-[0.8rem] shadow-md flex items-center gap-2"
-              style={{ background: 'linear-gradient(90deg, #ba0035, #f43f5e)' }}>
-              <span className="material-symbols-outlined text-[1rem]">emergency</span>
-              Panggil Triase CITO
-            </button>
+            <div className="flex gap-2 flex-wrap">
+              <button onClick={() => setShowAddPatientModal(true)} className="px-3.5 py-2.5 rounded-xl bg-[#008378] text-white font-bold text-[0.8rem] hover:bg-[#00685f] shadow-md flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[1rem]">person_add</span>
+                + Tambah Pasien Baru
+              </button>
+              <button onClick={fetchPatients} className="px-3.5 py-2.5 rounded-xl border border-[#bcc9c6]/40 text-[#008378] font-bold text-[0.8rem] hover:bg-white flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[1rem]">refresh</span>
+                Refresh Data Pasien Realtime
+              </button>
+              <button onClick={() => {
+                playDingDongBell();
+                setToast('🔔 MEMANGGIL TIM TRIASE CITO IGD DARURAT!');
+              }} className="px-4 py-2.5 rounded-xl text-white font-bold text-[0.8rem] shadow-md flex items-center gap-2"
+                style={{ background: 'linear-gradient(90deg, #ba0035, #f43f5e)' }}>
+                <span className="material-symbols-outlined text-[1rem]">emergency</span>
+                Panggil Triase CITO
+              </button>
+            </div>
           </div>
 
           {toast && (
@@ -126,8 +229,8 @@ export default function PerawatDashboard() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
+              { label: 'Pasien Terdaftar Realtime', value: displayPatients.length.toString(), sub: 'Tersambung Supabase Database', icon: 'groups', color: '#00685f' },
               { label: 'Pasien Menunggu TTV', value: '8', sub: 'Tanda-tanda vital belum diisi', icon: 'monitor_heart', color: '#e57c00', warn: true },
-              { label: 'Rawat Inap Bangsal', value: '14', sub: '100% Tempat tidur terisi', icon: 'hotel', color: '#00685f' },
               { label: 'Skrining Triase Merah', value: '1 Pasien', sub: 'Djoko Wahyudi • SpO2 91%', icon: 'emergency', color: '#ba0035', warn: true },
               { label: 'TTV Terisi Hari Ini', value: '32', sub: 'Synced SATUSEHAT Observation', icon: 'task_alt', color: '#16a34a' },
             ].map(s => (
@@ -158,15 +261,26 @@ export default function PerawatDashboard() {
 
                 <form onSubmit={handleSaveVitals} className="space-y-3.5">
                   <div>
-                    <label className="block text-[0.75rem] font-bold text-[#131b2e] mb-1">Pilih Pasien</label>
-                    <select value={vitals.patient_name}
-                      onChange={(e) => setVitals({ ...vitals, patient_name: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-xl text-[0.85rem] border border-[#bcc9c6]/50 focus:outline-none"
-                      style={{ background: 'rgba(234,237,255,0.4)' }}>
-                      <option value="Budi Santoso (RM-2025-08942)">Budi Santoso (RM-2025-08942)</option>
-                      <option value="Djoko Wahyudi (RM-2025-08939)">Djoko Wahyudi (RM-2025-08939 - CITO)</option>
-                      <option value="Dewi Wulandari (RM-2025-08415)">Dewi Wulandari (RM-2025-08415)</option>
-                      <option value="Siti Rahmawati (RM-2025-08413)">Siti Rahmawati (RM-2025-08413)</option>
+                    <label className="block text-[0.75rem] font-bold text-[#131b2e] mb-1">
+                      Pilih Pasien Terdaftar ({displayPatients.length} Pasien)
+                    </label>
+                    <select value={vitals.patient_id}
+                      onChange={(e) => {
+                        const selId = e.target.value;
+                        const found = displayPatients.find(p => p.id === selId);
+                        setVitals({
+                          ...vitals,
+                          patient_id: selId,
+                          patient_name: found ? `${found.name} (${found.rm})` : e.target.value,
+                        });
+                      }}
+                      className="w-full px-3.5 py-2.5 rounded-xl text-[0.85rem] font-bold text-[#00685f] border border-[#008378]/40 focus:outline-none"
+                      style={{ background: 'rgba(234,237,255,0.6)' }}>
+                      {displayPatients.map(p => (
+                        <option key={p.id || p.rm} value={p.id}>
+                          {p.name} ({p.rm}) • {p.age}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -246,36 +360,38 @@ export default function PerawatDashboard() {
                     <h2 className="text-[1.1rem] font-extrabold text-[#131b2e]">Daftar Pasien Triase &amp; Asuhan Keperawatan</h2>
                     <p className="text-[0.75rem] text-[#6d7a77]">Pemantauan kondisi vital pasien di bangsal &amp; IGD</p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-bold text-white bg-[#008378]">4 Pasien Aktif</span>
+                  <span className="px-2.5 py-1 rounded-full text-[0.7rem] font-bold text-white bg-[#008378]">
+                    {displayPatients.length} Pasien Aktif
+                  </span>
                 </div>
 
                 <div className="space-y-3">
-                  {mockTriagePatients.map(p => (
-                    <div key={p.no} className={`p-4 rounded-xl border transition-all ${p.cito ? 'bg-red-50/60 border-red-200' : 'bg-white/70 border-[#bcc9c6]/30'}`}>
+                  {displayPatients.map(p => (
+                    <div key={p.id || p.rm} className={`p-4 rounded-xl border transition-all ${p.cito ? 'bg-red-50/60 border-red-200' : 'bg-white/70 border-[#bcc9c6]/30'}`}>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="font-extrabold text-[#131b2e] text-[0.95rem]">{p.name}</span>
                           <span className="text-[0.75rem] text-[#006194] font-mono">{p.rm} • {p.age}</span>
                           {p.cito && <span className="px-2 py-0.5 rounded text-[0.6rem] font-bold text-white bg-[#ba0035] animate-pulse">CITO</span>}
                         </div>
-                        <span className={`px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold ${p.triase.includes('Merah') ? 'bg-red-100 text-red-700' : p.triase === 'Kuning' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>
-                          Triase: {p.triase}
+                        <span className={`px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold ${p.triase?.includes('Merah') ? 'bg-red-100 text-red-700' : p.triase === 'Kuning' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>
+                          Triase: {p.triase || 'Hijau'}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-4 gap-2 text-[0.75rem] bg-[#eaedff]/40 p-2.5 rounded-lg mb-2">
-                        <div><span className="text-[#6d7a77]">TD:</span> <span className="font-bold">{p.td}</span></div>
-                        <div><span className="text-[#6d7a77]">Nadi:</span> <span className="font-bold">{p.hr}</span></div>
-                        <div><span className="text-[#6d7a77]">Suhu:</span> <span className="font-bold">{p.temp}</span></div>
-                        <div><span className="text-[#6d7a77]">SpO2:</span> <span className={`font-bold ${parseInt(p.spo2) < 95 ? 'text-red-600' : 'text-emerald-700'}`}>{p.spo2}</span></div>
+                        <div><span className="text-[#6d7a77]">TD:</span> <span className="font-bold">{p.td || '120/80'}</span></div>
+                        <div><span className="text-[#6d7a77]">Nadi:</span> <span className="font-bold">{p.hr || '80 bpm'}</span></div>
+                        <div><span className="text-[#6d7a77]">Suhu:</span> <span className="font-bold">{p.temp || '36.5 °C'}</span></div>
+                        <div><span className="text-[#6d7a77]">SpO2:</span> <span className="font-bold text-emerald-700">{p.spo2 || '98%'}</span></div>
                       </div>
 
                       <div className="flex items-center justify-between pt-1 text-[0.75rem]">
                         <span className="text-[#6d7a77]">Status: <span className="font-semibold text-[#131b2e]">{p.status}</span></span>
                         <div className="flex gap-2">
-                          <button onClick={() => setVitals({ ...vitals, patient_name: `${p.name} (${p.rm})`, blood_pressure: p.td, heart_rate: p.hr.replace(' bpm',''), temperature: p.temp.replace(' °C',''), spo2: p.spo2.replace('%','') })}
+                          <button onClick={() => setVitals({ ...vitals, patient_id: p.id, patient_name: `${p.name} (${p.rm})`, blood_pressure: p.td || '120/80', heart_rate: (p.hr || '80').replace(' bpm',''), temperature: (p.temp || '36.5').replace(' °C',''), spo2: (p.spo2 || '98').replace('%','') })}
                             className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-[#008378] border border-[#008378]/30 hover:bg-[#008378]/10">
-                            Update TTV
+                            Pilih Pasien &amp; Input TTV
                           </button>
                           <button onClick={() => handleOpenSbar(p)}
                             className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-white bg-[#008378] hover:bg-[#00685f]">
@@ -339,6 +455,48 @@ export default function PerawatDashboard() {
                 Simpan Catatan SBAR
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Quick Add Patient Modal */}
+      {showAddPatientModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b pb-3 border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#008378] text-[1.5rem]">person_add</span>
+                <h3 className="text-[1.1rem] font-extrabold text-[#131b2e]">Tambah Pasien Baru (Realtime)</h3>
+              </div>
+              <button onClick={() => setShowAddPatientModal(false)} className="text-slate-400 hover:text-slate-600">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleQuickAddPatient} className="space-y-3 text-[0.8rem]">
+              <div>
+                <label className="font-bold text-[#131b2e] block mb-1">Nama Lengkap Pasien <span className="text-red-500">*</span></label>
+                <input type="text" required placeholder="Contoh: Ica Marlina" value={newPatientName}
+                  onChange={(e) => setNewPatientName(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#008378]" />
+              </div>
+              <div>
+                <label className="font-bold text-[#131b2e] block mb-1">NIK (Opsional - Auto Padded jika kosong)</label>
+                <input type="text" placeholder="3171..." value={newPatientNik}
+                  onChange={(e) => setNewPatientNik(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#008378]" />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button type="button" onClick={() => setShowAddPatientModal(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-[0.8rem] font-semibold">
+                  Batal
+                </button>
+                <button type="submit" disabled={addingPatient}
+                  className="px-4 py-2 rounded-xl bg-[#008378] text-white font-bold text-[0.8rem] flex items-center gap-1">
+                  {addingPatient ? 'Menyimpan...' : 'Simpan & Sync Pasien'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

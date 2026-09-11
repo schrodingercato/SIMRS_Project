@@ -49,6 +49,8 @@ export default function PendaftaranDashboard() {
 
   useEffect(() => {
     fetchPatients();
+    const interval = setInterval(fetchPatients, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
