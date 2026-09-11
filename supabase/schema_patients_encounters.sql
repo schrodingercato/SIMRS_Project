@@ -38,32 +38,20 @@ ALTER TABLE public.patients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.encounters ENABLE ROW LEVEL SECURITY;
 
 -- Policy untuk Patients:
--- Semua role (admin, resepsionis, dokter, perawat) bisa read
-CREATE POLICY "Enable read access for patients"
-ON public.patients FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for patients" ON public.patients;
+CREATE POLICY "Enable read access for patients" ON public.patients FOR SELECT USING (true);
 
--- Hanya admin/resepsionis yang bisa insert
-CREATE POLICY "Enable insert for admin and resepsionis on patients"
-ON public.patients FOR INSERT
-WITH CHECK (
-    (auth.jwt()->'user_metadata'->>'role') IN ('itadmin', 'front')
-);
+DROP POLICY IF EXISTS "Enable insert for admin and resepsionis on patients" ON public.patients;
+DROP POLICY IF EXISTS "Enable insert for patients" ON public.patients;
+CREATE POLICY "Enable insert for patients" ON public.patients FOR INSERT WITH CHECK (true);
 
 -- Policy untuk Encounters:
--- Semua role (admin, resepsionis, dokter, perawat) bisa read
-CREATE POLICY "Enable read access for encounters"
-ON public.encounters FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for encounters" ON public.encounters;
+CREATE POLICY "Enable read access for encounters" ON public.encounters FOR SELECT USING (true);
 
--- Hanya admin/resepsionis yang bisa mendaftarkan kunjungan (insert)
-CREATE POLICY "Enable insert for admin and resepsionis on encounters"
-ON public.encounters FOR INSERT
-WITH CHECK (
-    (auth.jwt()->'user_metadata'->>'role') IN ('itadmin', 'front')
-);
+DROP POLICY IF EXISTS "Enable insert for admin and resepsionis on encounters" ON public.encounters;
+DROP POLICY IF EXISTS "Enable insert for encounters" ON public.encounters;
+CREATE POLICY "Enable insert for encounters" ON public.encounters FOR INSERT WITH CHECK (true);
 
--- Hanya dokter/perawat atau admin yang bisa update status kunjungan
-CREATE POLICY "Enable update for encounters"
-ON public.encounters FOR UPDATE
-USING (
-    (auth.jwt()->'user_metadata'->>'role') IN ('itadmin', 'front', 'dpjp', 'nurse')
-);
+DROP POLICY IF EXISTS "Enable update for encounters" ON public.encounters;
+CREATE POLICY "Enable update for encounters" ON public.encounters FOR UPDATE USING (true);
