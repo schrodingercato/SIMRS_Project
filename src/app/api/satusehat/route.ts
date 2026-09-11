@@ -119,6 +119,59 @@ export async function POST(request: Request) {
         }
       };
 
+      const defaultLocationPayload = {
+        resourceType: "Location",
+        identifier: [
+          {
+            system: `http://sys-ids.kemkes.go.id/location/${orgId}`,
+            value: `LOC-${Date.now()}`
+          }
+        ],
+        status: "active",
+        name: "Poli Penyakit Dalam Ruang 204",
+        description: "Ruang Pemeriksaan Poliklinik Penyakit Dalam RS Sehat Nusantara",
+        mode: "instance",
+        managingOrganization: {
+          reference: `Organization/${orgId}`
+        }
+      };
+
+      const defaultObservationPayload = {
+        resourceType: "Observation",
+        status: "final",
+        category: [
+          {
+            coding: [
+              {
+                system: "http://terminology.hl7.org/CodeSystem/observation-category",
+                code: "vital-signs",
+                display: "Vital Signs"
+              }
+            ]
+          }
+        ],
+        code: {
+          coding: [
+            {
+              system: "http://loinc.org",
+              code: "8867-4",
+              display: "Heart rate"
+            }
+          ]
+        },
+        subject: {
+          reference: `Patient/${patientIhsId}`,
+          display: "Ica Marlina"
+        },
+        effectiveDateTime: dateWib,
+        valueQuantity: {
+          value: 82,
+          unit: "beats/minute",
+          system: "http://unitsofmeasure.org",
+          code: "/min"
+        }
+      };
+
       const defaultConditionPayload = {
         resourceType: "Condition",
         clinicalStatus: {
@@ -153,14 +206,16 @@ export async function POST(request: Request) {
         subject: {
           reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
-        },
-        encounter: {
-          reference: `Encounter/ENC-${Date.now()}`,
-          display: "Kunjungan Rawat Jalan Poli Penyakit Dalam"
         }
       };
 
-      const payload = custom_payload || (type === 'Condition' ? defaultConditionPayload : defaultEncounterPayload);
+      let payload = custom_payload;
+      if (!payload) {
+        if (type === 'Location') payload = defaultLocationPayload;
+        else if (type === 'Observation') payload = defaultObservationPayload;
+        else if (type === 'Condition') payload = defaultConditionPayload;
+        else payload = defaultEncounterPayload;
+      }
 
       const fhirRes = await fetch(`${config.baseUrl}/${type}`, {
         method: 'POST',

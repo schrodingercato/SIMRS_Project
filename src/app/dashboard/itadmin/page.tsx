@@ -275,16 +275,28 @@ export default function ITAdminDashboard() {
                   {authTesting ? 'Mengautentikasi...' : '1. Uji Autentikasi OAuth2 SATUSEHAT'}
                 </button>
 
+                <button type="button" disabled={authTesting} onClick={() => handleSendLiveFhir('Location')}
+                  className="py-2.5 px-4 rounded-xl text-white font-bold text-[0.85rem] bg-blue-600 hover:bg-blue-700 shadow-md flex items-center gap-2 transition-all">
+                  <span className="material-symbols-outlined text-[1rem]">location_on</span>
+                  2. Transmisi Live FHIR Location (Poli)
+                </button>
+
+                <button type="button" disabled={authTesting} onClick={() => handleSendLiveFhir('Observation')}
+                  className="py-2.5 px-4 rounded-xl text-white font-bold text-[0.85rem] bg-teal-600 hover:bg-teal-700 shadow-md flex items-center gap-2 transition-all">
+                  <span className="material-symbols-outlined text-[1rem]">monitor_heart</span>
+                  3. Transmisi Live FHIR Observation (TTV)
+                </button>
+
                 <button type="button" disabled={authTesting} onClick={() => handleSendLiveFhir('Encounter')}
                   className="py-2.5 px-4 rounded-xl text-white font-bold text-[0.85rem] bg-emerald-600 hover:bg-emerald-700 shadow-md flex items-center gap-2 transition-all">
                   <span className="material-symbols-outlined text-[1rem]">send</span>
-                  2. Transmisi Live FHIR Encounter ke Kemenkes
+                  4. Transmisi Live FHIR Encounter
                 </button>
 
                 <button type="button" disabled={authTesting} onClick={() => handleSendLiveFhir('Condition')}
                   className="py-2.5 px-4 rounded-xl text-white font-bold text-[0.85rem] bg-amber-600 hover:bg-amber-700 shadow-md flex items-center gap-2 transition-all">
                   <span className="material-symbols-outlined text-[1rem]">medical_information</span>
-                  3. Transmisi Live FHIR Condition (RME) ke Kemenkes
+                  5. Transmisi Live FHIR Condition (RME)
                 </button>
               </div>
             </form>
