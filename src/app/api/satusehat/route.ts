@@ -74,8 +74,8 @@ export async function POST(request: Request) {
         console.warn('Patient IHS lookup fallback:', e);
       }
 
-      // Format WIB ISO Date (e.g. 2026-09-11T13:26:45+07:00)
-      const dateWib = new Date().toISOString().replace(/\.\d{3}Z$/, '+07:00');
+      // Format UTC +00 ISO Date String (Kemenkes Mandate: UTC +00 format, e.g. 2026-09-11T06:47:38Z)
+      const nowUtc = new Date().toISOString();
 
       const defaultEncounterPayload = {
         resourceType: "Encounter",
@@ -96,21 +96,13 @@ export async function POST(request: Request) {
           display: "Ica Marlina"
         },
         period: {
-          start: dateWib
+          start: nowUtc
         },
-        location: [
-          {
-            location: {
-              reference: "Location/10007174",
-              display: "Poli Penyakit Dalam - Ruang 204"
-            }
-          }
-        ],
         statusHistory: [
           {
             status: "arrived",
             period: {
-              start: dateWib
+              start: nowUtc
             }
           }
         ],
@@ -131,6 +123,15 @@ export async function POST(request: Request) {
         name: "Poli Penyakit Dalam Ruang 204",
         description: "Ruang Pemeriksaan Poliklinik Penyakit Dalam RS Sehat Nusantara",
         mode: "instance",
+        physicalType: {
+          coding: [
+            {
+              system: "http://terminology.hl7.org/CodeSystem/location-physical-type",
+              code: "ro",
+              display: "Room"
+            }
+          ]
+        },
         managingOrganization: {
           reference: `Organization/${orgId}`
         }
@@ -163,7 +164,7 @@ export async function POST(request: Request) {
           reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
         },
-        effectiveDateTime: dateWib,
+        effectiveDateTime: nowUtc,
         valueQuantity: {
           value: 82,
           unit: "beats/minute",
