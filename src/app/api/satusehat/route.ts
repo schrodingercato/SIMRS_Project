@@ -164,7 +164,16 @@ export async function POST(request: Request) {
           reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
         },
+        encounter: {
+          reference: `Encounter/ENC-${Date.now()}`
+        },
         effectiveDateTime: nowUtc,
+        issued: nowUtc,
+        performer: [
+          {
+            reference: `Organization/${orgId}`
+          }
+        ],
         valueQuantity: {
           value: 82,
           unit: "beats/minute",
