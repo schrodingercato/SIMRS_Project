@@ -7,11 +7,12 @@ const supabase = createClient(
 );
 
 // GET: Ambil Detail Pasien
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const { data, error } = await supabase
     .from('patients')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
@@ -19,7 +20,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // PUT: Update Data Pasien (Cek RBAC Role)
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const body = await request.json();
   const { full_name, dob, gender, address, phone, marital_status, role } = body;
 
@@ -35,7 +37,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   const { data: existing, error: fetchError } = await supabase
     .from('patients')
     .select('fhir_data')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (fetchError) return NextResponse.json({ error: fetchError.message }, { status: 400 });
@@ -59,7 +61,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   const { data, error } = await supabase
     .from('patients')
     .update({ full_name, dob, gender, address, phone, marital_status, fhir_data })
-    .eq('id', params.id)
+    .eq('id', id)
     .select();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

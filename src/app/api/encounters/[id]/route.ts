@@ -7,7 +7,8 @@ const supabase = createClient(
 );
 
 // PUT: Update Kunjungan (Cek RBAC Role)
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const body = await request.json();
   const { status, room_number, estimated_time, role } = body;
 
@@ -32,7 +33,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   const { data: existing, error: fetchError } = await supabase
     .from('encounters')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (fetchError) return NextResponse.json({ error: fetchError.message }, { status: 400 });
@@ -52,7 +53,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     fhir_data.period.start = estimated_time;
   }
 
-  const updateFields: any = { fhir_data };
+  const updateFields: Record<string, unknown> = { fhir_data };
   if (status) updateFields.status = status;
   if (room_number) updateFields.room_number = room_number;
   if (estimated_time) updateFields.estimated_time = estimated_time;
@@ -60,7 +61,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   const { data, error } = await supabase
     .from('encounters')
     .update(updateFields)
-    .eq('id', params.id)
+    .eq('id', id)
     .select();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
