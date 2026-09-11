@@ -250,7 +250,7 @@ export default function AntrianPage() {
                       { label: 'In-progress (Periksa)', color: '#006398', bg: '#dbeafe' },
                       { label: 'Finished (Selesai)', color: '#16a34a', bg: '#dcfce7' },
                     ].map(s => (
-                      <div key={s.label} className="px-2.5 py-2 rounded-lg text-[0.65rem] font-bold flex items-center gap-1.5" style={{ background: s.bg, color: s.text }}>
+                      <div key={s.label} className="px-2.5 py-2 rounded-lg text-[0.65rem] font-bold flex items-center gap-1.5" style={{ background: s.bg, color: s.color }}>
                         <span className="w-2 h-2 rounded-full inline-block" style={{ background: s.color }}></span>
                         <span style={{ color: s.color }}>{s.label}</span>
                       </div>
