@@ -57,9 +57,32 @@ export async function POST(request: Request) {
     // 2. If action is 'test_send' or 'send_fhir', send live FHIR payload to Kemenkes API Gateway
     if (action === 'test_send' || action === 'send_fhir') {
       const type = resource_type || 'Encounter';
-      
+
+      // Attempt to query Kemenkes Sandbox to find a real registered Patient IHS ID by NIK
+      let patientIhsId = '100000030009';
+      try {
+        const patientSearchRes = await fetch(`${config.baseUrl}/Patient?identifier=https://fhir.kemkes.go.id/id/nik|3171012304900001`, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        if (patientSearchRes.ok) {
+          const patientSearchData = await patientSearchRes.json();
+          if (patientSearchData.entry?.[0]?.resource?.id) {
+            patientIhsId = patientSearchData.entry[0].resource.id;
+          }
+        }
+      } catch (e) {
+        console.warn('Patient IHS lookup fallback:', e);
+      }
+
+      const nowIso = new Date().toISOString();
       const defaultEncounterPayload = {
         resourceType: "Encounter",
+        identifier: [
+          {
+            system: `http://sys-ids.kemkes.go.id/encounter/${orgId}`,
+            value: `ENC-${Date.now()}`
+          }
+        ],
         status: "arrived",
         class: {
           system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
@@ -67,16 +90,17 @@ export async function POST(request: Request) {
           display: "ambulatory"
         },
         subject: {
-          reference: "Patient/100000030009",
+          reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
         },
         period: {
-          start: new Date().toISOString()
+          start: nowIso
         },
-        location: [
+        statusHistory: [
           {
-            location: {
-              display: "Poli Penyakit Dalam - Ruang 204"
+            status: "arrived",
+            period: {
+              start: nowIso
             }
           }
         ],
@@ -117,7 +141,7 @@ export async function POST(request: Request) {
           ]
         },
         subject: {
-          reference: "Patient/100000030009",
+          reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
         }
       };
