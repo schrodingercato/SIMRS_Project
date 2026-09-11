@@ -61,6 +61,45 @@ export default function ITAdminDashboard() {
     }
   };
 
+  const handleSendLiveFhir = async (resourceType: string) => {
+    setAuthTesting(true);
+    setAuthResult(null);
+
+    try {
+      const res = await fetch('/api/satusehat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...satusehatConfig,
+          action: 'test_send',
+          resource_type: resourceType,
+        }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        setAuthResult({
+          success: false,
+          message: json.error || 'Gagal mengirimkan transaksi FHIR ke Kemenkes.',
+          data: json,
+        });
+      } else {
+        setAuthResult({
+          success: true,
+          message: json.message || `Transaksi FHIR ${resourceType} Berhasil Dikirim ke Server Kemenkes!`,
+          data: json,
+        });
+      }
+    } catch (err: any) {
+      setAuthResult({
+        success: false,
+        message: err.message || 'Terjadi kesalahan koneksi saat transmisi data ke Kemenkes.',
+      });
+    } finally {
+      setAuthTesting(false);
+    }
+  };
+
   const handlePingBridge = () => {
     setTestingPing(true);
     setPingStatus(null);
@@ -229,15 +268,23 @@ export default function ITAdminDashboard() {
                 </div>
               )}
 
-              <div className="flex gap-3 pt-1">
+              <div className="flex gap-3 pt-1 flex-wrap">
                 <button type="submit" disabled={authTesting}
                   className="py-2.5 px-5 rounded-xl text-white font-bold text-[0.85rem] bg-indigo-600 hover:bg-indigo-700 shadow-md flex items-center gap-2 transition-all">
                   <span className={`material-symbols-outlined text-[1rem] ${authTesting ? 'animate-spin' : ''}`}>sync</span>
-                  {authTesting ? 'Mengautentikasi...' : 'Uji Autentikasi OAuth2 SATUSEHAT'}
+                  {authTesting ? 'Mengautentikasi...' : '1. Uji Autentikasi OAuth2 SATUSEHAT'}
                 </button>
-                <button type="button" onClick={() => alert('Konfigurasi Kode Akses SATUSEHAT berhasil disimpan ke environment SIMRS!')}
-                  className="py-2.5 px-4 rounded-xl border border-[#bcc9c6]/40 font-bold text-[0.85rem] text-[#3d4947] hover:bg-white transition-colors">
-                  Simpan Konfigurasi Key
+
+                <button type="button" disabled={authTesting} onClick={() => handleSendLiveFhir('Encounter')}
+                  className="py-2.5 px-4 rounded-xl text-white font-bold text-[0.85rem] bg-emerald-600 hover:bg-emerald-700 shadow-md flex items-center gap-2 transition-all">
+                  <span className="material-symbols-outlined text-[1rem]">send</span>
+                  2. Transmisi Live FHIR Encounter ke Kemenkes
+                </button>
+
+                <button type="button" disabled={authTesting} onClick={() => handleSendLiveFhir('Condition')}
+                  className="py-2.5 px-4 rounded-xl text-white font-bold text-[0.85rem] bg-amber-600 hover:bg-amber-700 shadow-md flex items-center gap-2 transition-all">
+                  <span className="material-symbols-outlined text-[1rem]">medical_information</span>
+                  3. Transmisi Live FHIR Condition (RME) ke Kemenkes
                 </button>
               </div>
             </form>

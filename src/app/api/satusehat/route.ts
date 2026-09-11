@@ -15,7 +15,7 @@ const ENDPOINTS = {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { env = 'sandbox', organization_id, client_id, client_secret } = body;
+    const { action = 'auth', env = 'sandbox', organization_id, client_id, client_secret, resource_type, custom_payload } = body;
 
     if (!client_id || !client_secret) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     const config = env === 'production' ? ENDPOINTS.production : ENDPOINTS.sandbox;
 
-    // Send OAuth2 Auth Request to Kemenkes SATUSEHAT API
+    // 1. Send OAuth2 Auth Request to Kemenkes SATUSEHAT API
     const authFormData = new URLSearchParams();
     authFormData.append('client_id', client_id);
     authFormData.append('client_secret', client_secret);
@@ -51,15 +51,111 @@ export async function POST(request: Request) {
       );
     }
 
+    const accessToken = authData.access_token;
+    const orgId = organization_id || '7dc1ce03-b4a8-4636-997f-4c75a6ae6e00';
+
+    // 2. If action is 'test_send' or 'send_fhir', send live FHIR payload to Kemenkes API Gateway
+    if (action === 'test_send' || action === 'send_fhir') {
+      const type = resource_type || 'Encounter';
+      
+      const defaultEncounterPayload = {
+        resourceType: "Encounter",
+        status: "arrived",
+        class: {
+          system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          code: "AMB",
+          display: "ambulatory"
+        },
+        subject: {
+          reference: "Patient/100000030009",
+          display: "Ica Marlina"
+        },
+        period: {
+          start: new Date().toISOString()
+        },
+        location: [
+          {
+            location: {
+              display: "Poli Penyakit Dalam - Ruang 204"
+            }
+          }
+        ],
+        serviceProvider: {
+          reference: `Organization/${orgId}`
+        }
+      };
+
+      const defaultConditionPayload = {
+        resourceType: "Condition",
+        clinicalStatus: {
+          coding: [
+            {
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              code: "active",
+              display: "Active"
+            }
+          ]
+        },
+        category: [
+          {
+            coding: [
+              {
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
+                code: "encounter-diagnosis",
+                display: "Encounter Diagnosis"
+              }
+            ]
+          }
+        ],
+        code: {
+          coding: [
+            {
+              system: "http://hl7.org/fhir/sid/icd-10",
+              code: "I10",
+              display: "Essential (primary) hypertension"
+            }
+          ]
+        },
+        subject: {
+          reference: "Patient/100000030009",
+          display: "Ica Marlina"
+        }
+      };
+
+      const payload = custom_payload || (type === 'Condition' ? defaultConditionPayload : defaultEncounterPayload);
+
+      const fhirRes = await fetch(`${config.baseUrl}/${type}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const fhirData = await fhirRes.json();
+
+      return NextResponse.json({
+        success: fhirRes.ok,
+        message: fhirRes.ok 
+          ? `SUCCESS! Transaksi FHIR ${type} Berhasil Dikirrim Ke Server Kemenkes SATUSEHAT (${env.toUpperCase()})!`
+          : `Kemenkes API Response (${fhirRes.status}): ${fhirData.message || fhirData.issue?.[0]?.details?.text || 'Pengiriman FHIR selesai'}`,
+        status: fhirRes.status,
+        fhir_resource: type,
+        kemenkes_response: fhirData,
+        access_token_masked: accessToken.slice(0, 10) + '...' + accessToken.slice(-10),
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: `Autentikasi OAuth2 SATUSEHAT Platform (${env.toUpperCase()}) Berhasil!`,
       environment: env,
-      organization_id: organization_id || '100026850',
+      organization_id: orgId,
       token_type: authData.token_type || 'Bearer',
       expires_in: authData.expires_in || 3600,
       issued_at: new Date().toISOString(),
-      access_token_masked: authData.access_token.slice(0, 10) + '...' + authData.access_token.slice(-10),
+      access_token_masked: accessToken.slice(0, 10) + '...' + accessToken.slice(-10),
     });
   } catch (err: any) {
     return NextResponse.json(
