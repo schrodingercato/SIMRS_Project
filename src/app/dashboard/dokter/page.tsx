@@ -16,6 +16,8 @@ export default function DokterDashboard() {
     { id: '4', no: 'A-020', name: 'Dewi Wulandari', rm: 'RM-2025-08415', age: '24 Thn', gender: 'P', waktu: '09:15 WIB', status: 'Arrived', alergi: null, asuransi: 'Asuransi Swasta' },
   ];
 
+  const [statusMap, setStatusMap] = useState<Record<string, string>>({});
+
   const fetchPatients = async () => {
     try {
       const res = await fetch('/api/patients');
@@ -26,10 +28,11 @@ export default function DokterDashboard() {
           no: `A-0${index + 21}`,
           name: p.full_name,
           rm: `RM-2026-${(p.nik || '00000').slice(-5)}`,
+          nik: p.nik,
           age: p.dob ? `${new Date().getFullYear() - new Date(p.dob).getFullYear()} Thn` : '30 Thn',
           gender: p.gender === 'male' ? 'L' : 'P',
           waktu: '09:30 WIB',
-          status: index === 0 ? 'Arrived' : 'Arrived',
+          status: 'Arrived',
           alergi: null,
           asuransi: 'BPJS Kesehatan',
         }));
@@ -46,13 +49,13 @@ export default function DokterDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const patientsList = dbPatients.length > 0 ? [...dbPatients, ...defaultMockPatients] : defaultMockPatients;
+  const rawPatientsList = dbPatients.length > 0 ? [...dbPatients, ...defaultMockPatients] : defaultMockPatients;
 
-  const [patients, setPatients] = useState<any[]>(patientsList);
-
-  useEffect(() => {
-    setPatients(patientsList);
-  }, [dbPatients]);
+  // Apply status overrides so status changes to 'In-progress' or 'Finished' persist across auto-polls
+  const patientsList = rawPatientsList.map(p => ({
+    ...p,
+    status: statusMap[p.id] || statusMap[p.no] || p.status,
+  }));
 
   const [filterStatus, setFilterStatus] = useState('Semua Status');
   const [showLabModal, setShowLabModal] = useState(false);
@@ -64,14 +67,32 @@ export default function DokterDashboard() {
     'Arrived':     { text: '#e57c00', bg: '#fef9c3' },
   };
 
-  const handlePanggilPasien = (no: string, name: string) => {
+  const handlePanggilPasien = (item: any) => {
     playDingDongBell();
-    setPatients(prev => prev.map(p => p.no === no ? { ...p, status: 'In-progress' } : p));
-    setToast(`Memanggil ${name} (${no}) masuk ke Ruang Periksa Dokter...`);
+    const key = item.id || item.no;
+    setStatusMap(prev => ({
+      ...prev,
+      [key]: 'In-progress',
+      [item.no]: 'In-progress',
+    }));
+    setToast(`Memanggil ${item.name} (${item.no}) masuk ke Ruang Periksa Dokter...`);
     setTimeout(() => setToast(null), 3500);
   };
 
-  const filteredPatients = patients.filter(p => {
+  const openRmeForPatient = (p: any) => {
+    const query = new URLSearchParams({
+      id: p.id || p.no,
+      name: p.name || '',
+      rm: p.rm || '',
+      nik: p.nik || '',
+      age: p.age || '',
+      gender: p.gender || '',
+      asuransi: p.asuransi || 'BPJS Kesehatan',
+    }).toString();
+    router.push(`/dashboard/dokter/rekam-medis?${query}`);
+  };
+
+  const filteredPatients = patientsList.filter(p => {
     if (filterStatus === 'Semua Status') return true;
     return p.status === filterStatus;
   });
@@ -121,10 +142,10 @@ export default function DokterDashboard() {
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Total Pasien Poli Realtime', value: patients.length.toString(), sub: 'Tersambung Supabase DB', icon: 'groups', color: '#006194' },
-              { label: 'Pasien Menunggu', value: patients.filter(p=>p.status==='Arrived').length.toString(), sub: '~14 mnt/pasien', icon: 'hourglass_top', color: '#e57c00', warn: true },
+              { label: 'Total Pasien Poli Realtime', value: patientsList.length.toString(), sub: 'Tersambung Supabase DB', icon: 'groups', color: '#006194' },
+              { label: 'Pasien Menunggu', value: patientsList.filter((p: any) => p.status === 'Arrived').length.toString(), sub: '~14 mnt/pasien', icon: 'hourglass_top', color: '#e57c00', warn: true },
               { label: 'Sedang Diperiksa', value: 'A-018', sub: 'Budi Santoso • Aktif 18 mnt', icon: 'person_check', color: '#00685f' },
-              { label: 'Pemeriksaan Selesai', value: patients.filter(p=>p.status==='Finished').length.toString(), sub: 'Konsultasi Beres', icon: 'task_alt', color: '#16a34a' },
+              { label: 'Pemeriksaan Selesai', value: patientsList.filter((p: any) => p.status === 'Finished').length.toString(), sub: 'Konsultasi Beres', icon: 'task_alt', color: '#16a34a' },
             ].map(s => (
               <div key={s.label} className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
                 <div className="flex items-center justify-between mb-2">
@@ -193,21 +214,21 @@ export default function DokterDashboard() {
                             </td>
                             <td className="px-4 py-3">
                               {p.status === 'Finished' && (
-                                <button onClick={() => router.push('/dashboard/dokter/rekam-medis')}
+                                <button onClick={() => openRmeForPatient(p)}
                                   className="text-[0.7rem] text-emerald-700 font-bold flex items-center gap-1 hover:underline">
                                   <span className="material-symbols-outlined text-[0.9rem]">task_alt</span> Lihat RME Selesai
                                 </button>
                               )}
                               {p.status === 'In-progress' && (
                                 <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.75rem] font-bold text-white transition-transform hover:scale-[1.02]"
-                                  onClick={() => router.push('/dashboard/dokter/rekam-medis')}
+                                  onClick={() => openRmeForPatient(p)}
                                   style={{ background: 'linear-gradient(90deg, #006194, #00685f)' }}>
                                   <span className="material-symbols-outlined text-[0.875rem]">description</span>
                                   Buka Rekam Medis Elektronik (RME)
                                 </button>
                               )}
                               {p.status === 'Arrived' && (
-                                <button onClick={() => handlePanggilPasien(p.no, p.name)}
+                                <button onClick={() => handlePanggilPasien(p)}
                                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[0.75rem] font-bold text-white transition-transform hover:scale-[1.02]"
                                   style={{ background: 'linear-gradient(90deg, #e57c00, #d97706)' }}>
                                   <span className="material-symbols-outlined text-[0.875rem]">campaign</span>

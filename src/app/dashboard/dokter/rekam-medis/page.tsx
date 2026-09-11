@@ -1,22 +1,30 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar, TopBar, useCurrentUser } from '../../components';
 
-export default function RekamMedisDokterPage() {
+function RekamMedisDokterContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { userProfile } = useCurrentUser();
+
+  const pName = searchParams.get('name') || 'Budi Santoso';
+  const pRm = searchParams.get('rm') || 'RM-2025-08942';
+  const pNik = searchParams.get('nik') || '3171851203890061';
+  const pAge = searchParams.get('age') || '35 Thn';
+  const pGender = searchParams.get('gender') || 'L';
+  const pAsuransi = searchParams.get('asuransi') || 'BPJS Kesehatan';
 
   // Patient Context State
   const [patient] = useState({
-    id: '1',
-    name: 'Budi Santoso',
-    rm: 'RM-2025-08942',
-    nik: '3171851203890061',
-    age: '35 Thn (L)',
-    asuransi: 'BPJS Kesehatan',
-    alergi: 'PENISILIN',
+    id: searchParams.get('id') || '1',
+    name: pName,
+    rm: pRm,
+    nik: pNik,
+    age: `${pAge} (${pGender})`,
+    asuransi: pAsuransi,
+    alergi: pName.toLowerCase().includes('budi') ? 'PENISILIN' : null,
     poliklinik: 'Poli Penyakit Dalam',
   });
 
@@ -288,5 +296,13 @@ export default function RekamMedisDokterPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function RekamMedisDokterPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Memuat Rekam Medis Pasien...</div>}>
+      <RekamMedisDokterContent />
+    </Suspense>
   );
 }
