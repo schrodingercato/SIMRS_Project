@@ -137,6 +137,33 @@ export async function POST(request: Request) {
         }
       };
 
+      // Automatic Encounter creation to obtain valid SATUSEHAT Encounter UUID for Observation/Condition references
+      let realEncounterId = '';
+      if (type === 'Observation' || type === 'Condition') {
+        try {
+          const encRes = await fetch(`${config.baseUrl}/Encounter`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(defaultEncounterPayload),
+          });
+          if (encRes.ok) {
+            const encData = await encRes.json();
+            if (encData.id) {
+              realEncounterId = encData.id;
+            }
+          }
+        } catch (e) {
+          console.warn('Auto Encounter creation error:', e);
+        }
+      }
+
+      if (!realEncounterId) {
+        realEncounterId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : '4d7c679a-1234-4567-89ab-cdef01234567';
+      }
+
       const defaultObservationPayload = {
         resourceType: "Observation",
         status: "final",
@@ -165,7 +192,7 @@ export async function POST(request: Request) {
           display: "Ica Marlina"
         },
         encounter: {
-          reference: `Encounter/ENC-${Date.now()}`
+          reference: `Encounter/${realEncounterId}`
         },
         effectiveDateTime: nowUtc,
         issued: nowUtc,
@@ -216,6 +243,9 @@ export async function POST(request: Request) {
         subject: {
           reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
+        },
+        encounter: {
+          reference: `Encounter/${realEncounterId}`
         }
       };
 
