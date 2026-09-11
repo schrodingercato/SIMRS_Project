@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     if (action === 'test_send' || action === 'send_fhir') {
       const type = resource_type || 'Encounter';
 
-      // Attempt to query Kemenkes Sandbox to find a real registered Patient IHS ID by NIK
+      // Dynamic Patient IHS lookup in Kemenkes Sandbox
       let patientIhsId = '100000030009';
       try {
         const patientSearchRes = await fetch(`${config.baseUrl}/Patient?identifier=https://fhir.kemkes.go.id/id/nik|3171012304900001`, {
@@ -137,31 +137,59 @@ export async function POST(request: Request) {
         }
       };
 
-      // Automatic Encounter creation to obtain valid SATUSEHAT Encounter UUID for Observation/Condition references
+      // Encounter ID resolution for Observation and Condition resources
       let realEncounterId = '';
+      let encounterError: any = null;
+
       if (type === 'Observation' || type === 'Condition') {
+        // 1. Try to search for an existing Encounter on SATUSEHAT
         try {
-          const encRes = await fetch(`${config.baseUrl}/Encounter`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(defaultEncounterPayload),
+          const encSearchRes = await fetch(`${config.baseUrl}/Encounter?subject=Patient/${patientIhsId}`, {
+            headers: { 'Authorization': `Bearer ${accessToken}` }
           });
-          if (encRes.ok) {
-            const encData = await encRes.json();
-            if (encData.id) {
-              realEncounterId = encData.id;
+          if (encSearchRes.ok) {
+            const encSearchData = await encSearchRes.json();
+            if (encSearchData.entry?.[0]?.resource?.id) {
+              realEncounterId = encSearchData.entry[0].resource.id;
             }
           }
         } catch (e) {
-          console.warn('Auto Encounter creation error:', e);
+          console.warn('Encounter search error:', e);
         }
-      }
 
-      if (!realEncounterId) {
-        realEncounterId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : '4d7c679a-1234-4567-89ab-cdef01234567';
+        // 2. If no existing Encounter found on SATUSEHAT, create one live
+        if (!realEncounterId) {
+          try {
+            const encRes = await fetch(`${config.baseUrl}/Encounter`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(defaultEncounterPayload),
+            });
+            const encData = await encRes.json();
+            if (encRes.ok && encData.id) {
+              realEncounterId = encData.id;
+            } else {
+              encounterError = encData;
+            }
+          } catch (e: any) {
+            encounterError = { message: e.message };
+          }
+        }
+
+        // 3. If Encounter creation/lookup failed, return the exact SATUSEHAT error details
+        if (!realEncounterId && encounterError) {
+          return NextResponse.json({
+            success: false,
+            message: `Gagal mereferensikan Encounter di SATUSEHAT: ${encounterError.issue?.[0]?.details?.text || encounterError.message || 'Encounter reference target not found'}`,
+            status: 400,
+            fhir_resource: type,
+            kemenkes_response: encounterError,
+            access_token_masked: accessToken.slice(0, 10) + '...' + accessToken.slice(-10),
+          });
+        }
       }
 
       const defaultObservationPayload = {
