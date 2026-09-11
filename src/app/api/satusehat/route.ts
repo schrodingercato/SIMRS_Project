@@ -74,7 +74,9 @@ export async function POST(request: Request) {
         console.warn('Patient IHS lookup fallback:', e);
       }
 
-      const nowIso = new Date().toISOString();
+      // Format WIB ISO Date (e.g. 2026-09-11T13:26:45+07:00)
+      const dateWib = new Date().toISOString().replace(/\.\d{3}Z$/, '+07:00');
+
       const defaultEncounterPayload = {
         resourceType: "Encounter",
         identifier: [
@@ -94,13 +96,21 @@ export async function POST(request: Request) {
           display: "Ica Marlina"
         },
         period: {
-          start: nowIso
+          start: dateWib
         },
+        location: [
+          {
+            location: {
+              reference: "Location/10007174",
+              display: "Poli Penyakit Dalam - Ruang 204"
+            }
+          }
+        ],
         statusHistory: [
           {
             status: "arrived",
             period: {
-              start: nowIso
+              start: dateWib
             }
           }
         ],
@@ -143,6 +153,10 @@ export async function POST(request: Request) {
         subject: {
           reference: `Patient/${patientIhsId}`,
           display: "Ica Marlina"
+        },
+        encounter: {
+          reference: `Encounter/ENC-${Date.now()}`,
+          display: "Kunjungan Rawat Jalan Poli Penyakit Dalam"
         }
       };
 
