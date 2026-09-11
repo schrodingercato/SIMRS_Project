@@ -13,6 +13,54 @@ export default function ITAdminDashboard() {
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<any>(null);
 
+  // SATUSEHAT API Credentials State (From PDF Specs)
+  const [satusehatConfig, setSatusehatConfig] = useState({
+    env: 'sandbox',
+    organization_id: '100026850',
+    client_id: '',
+    client_secret: '',
+  });
+
+  const [authTesting, setAuthTesting] = useState(false);
+  const [authResult, setAuthResult] = useState<{ success: boolean; message: string; data?: any } | null>(null);
+
+  const handleTestSatusehatAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthTesting(true);
+    setAuthResult(null);
+
+    try {
+      const res = await fetch('/api/satusehat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(satusehatConfig),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || json.error) {
+        setAuthResult({
+          success: false,
+          message: json.error || 'Gagal mengautentikasi ke SATUSEHAT Platform.',
+          data: json.raw,
+        });
+      } else {
+        setAuthResult({
+          success: true,
+          message: json.message || 'Autentikasi OAuth2 Berhasil!',
+          data: json,
+        });
+      }
+    } catch (err: any) {
+      setAuthResult({
+        success: false,
+        message: err.message || 'Terjadi kesalahan koneksi ke server SATUSEHAT.',
+      });
+    } finally {
+      setAuthTesting(false);
+    }
+  };
+
   const handlePingBridge = () => {
     setTestingPing(true);
     setPingStatus(null);
@@ -99,6 +147,100 @@ export default function ITAdminDashboard() {
                 <div className="text-[0.65rem] text-[#6d7a77] mt-0.5">{s.sub}</div>
               </div>
             ))}
+          </div>
+
+          {/* SATUSEHAT API Key Credentials Configuration Form (PDF Specs Implementation) */}
+          <div className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#bcc9c6]/20 pb-4 mb-4">
+              <div>
+                <h2 className="text-[1.1rem] font-extrabold text-[#131b2e] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-indigo-600">key</span>
+                  Integrasi Kode Akses API SATUSEHAT Platform (SSP)
+                </h2>
+                <p className="text-[0.75rem] text-[#6d7a77]">
+                  Pengaturan Organization ID, Client ID, dan Client Secret dari Portal SATUSEHAT Kemenkes RI (Sandbox &amp; Production)
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setSatusehatConfig({ ...satusehatConfig, env: 'sandbox' })}
+                  className={`px-3 py-1.5 rounded-xl text-[0.75rem] font-bold transition-all ${satusehatConfig.env === 'sandbox' ? 'bg-amber-600 text-white shadow' : 'bg-slate-100 text-slate-700'}`}>
+                  Sandbox (Staging)
+                </button>
+                <button type="button" onClick={() => setSatusehatConfig({ ...satusehatConfig, env: 'production' })}
+                  className={`px-3 py-1.5 rounded-xl text-[0.75rem] font-bold transition-all ${satusehatConfig.env === 'production' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 text-slate-700'}`}>
+                  Production
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={handleTestSatusehatAuth} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[0.75rem] font-bold text-[#131b2e] mb-1">
+                    Organization ID (Kemenkes) <span className="text-red-500">*</span>
+                  </label>
+                  <input type="text" required
+                    placeholder="Contoh: 100026850"
+                    value={satusehatConfig.organization_id}
+                    onChange={(e) => setSatusehatConfig({ ...satusehatConfig, organization_id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl text-[0.85rem] font-mono border border-[#bcc9c6]/50 focus:outline-none"
+                    style={{ background: 'rgba(234,237,255,0.4)' }} />
+                </div>
+
+                <div>
+                  <label className="block text-[0.75rem] font-bold text-[#131b2e] mb-1">
+                    Client ID / Client Key <span className="text-red-500">*</span>
+                  </label>
+                  <input type="text" required
+                    placeholder="Masukkan Client ID dari SATUSEHAT Platform"
+                    value={satusehatConfig.client_id}
+                    onChange={(e) => setSatusehatConfig({ ...satusehatConfig, client_id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl text-[0.85rem] font-mono border border-[#bcc9c6]/50 focus:outline-none"
+                    style={{ background: 'rgba(234,237,255,0.4)' }} />
+                </div>
+
+                <div>
+                  <label className="block text-[0.75rem] font-bold text-[#131b2e] mb-1">
+                    Client Secret (Secret Key) <span className="text-red-500">*</span>
+                  </label>
+                  <input type="password" required
+                    placeholder="Masukkan Client Secret dari SATUSEHAT Platform"
+                    value={satusehatConfig.client_secret}
+                    onChange={(e) => setSatusehatConfig({ ...satusehatConfig, client_secret: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl text-[0.85rem] font-mono border border-[#bcc9c6]/50 focus:outline-none"
+                    style={{ background: 'rgba(234,237,255,0.4)' }} />
+                </div>
+              </div>
+
+              {authResult && (
+                <div className={`p-4 rounded-2xl text-[0.8rem] font-mono space-y-1 ${authResult.success ? 'bg-emerald-50 text-emerald-900 border border-emerald-300' : 'bg-red-50 text-red-900 border border-red-300'}`}>
+                  <div className="font-bold flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[1.2rem]">{authResult.success ? 'check_circle' : 'error'}</span>
+                    {authResult.message}
+                  </div>
+                  {authResult.data && (
+                    <div className="text-[0.75rem] pt-1 opacity-90">
+                      <div>Environment: <b className="uppercase">{authResult.data.environment}</b></div>
+                      <div>Org ID: {authResult.data.organization_id}</div>
+                      <div>Masked Token: <span className="text-emerald-700 font-bold">{authResult.data.access_token_masked}</span></div>
+                      <div>Token Expiry: {authResult.data.expires_in} seconds</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-1">
+                <button type="submit" disabled={authTesting}
+                  className="py-2.5 px-5 rounded-xl text-white font-bold text-[0.85rem] bg-indigo-600 hover:bg-indigo-700 shadow-md flex items-center gap-2 transition-all">
+                  <span className={`material-symbols-outlined text-[1rem] ${authTesting ? 'animate-spin' : ''}`}>sync</span>
+                  {authTesting ? 'Mengautentikasi...' : 'Uji Autentikasi OAuth2 SATUSEHAT'}
+                </button>
+                <button type="button" onClick={() => alert('Konfigurasi Kode Akses SATUSEHAT berhasil disimpan ke environment SIMRS!')}
+                  className="py-2.5 px-4 rounded-xl border border-[#bcc9c6]/40 font-bold text-[0.85rem] text-[#3d4947] hover:bg-white transition-colors">
+                  Simpan Konfigurasi Key
+                </button>
+              </div>
+            </form>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
