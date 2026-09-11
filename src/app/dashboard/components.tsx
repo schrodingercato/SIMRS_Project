@@ -68,6 +68,41 @@ const DASHBOARD_ROUTES: Record<string, string> = {
   itadmin: '/dashboard/itadmin',
 };
 
+// Web Audio API Bell Chime Synthesizer
+export function playDingDongBell() {
+  try {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+
+    // Note 1: E5 (659Hz)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(659.25, ctx.currentTime);
+    gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.6);
+
+    // Note 2: C#5 (554Hz)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(554.37, ctx.currentTime + 0.3);
+    gain2.gain.setValueAtTime(0.3, ctx.currentTime + 0.3);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(ctx.currentTime + 0.3);
+    osc2.stop(ctx.currentTime + 1.2);
+  } catch (e) {
+    console.error('Audio bell error:', e);
+  }
+}
+
 export function useCurrentUser() {
   const [userProfile, setUserProfile] = useState<UserRoleInfo>(DEFAULT_ROLE_PROFILES.front);
   const [loading, setLoading] = useState(true);
@@ -124,6 +159,7 @@ export function useCurrentUser() {
 export function Sidebar({ active }: { active: string }) {
   const router = useRouter();
   const { userProfile } = useCurrentUser();
+  const [showCitoModal, setShowCitoModal] = useState(false);
 
   const navItems = [
     { label: 'Pendaftaran Pasien', icon: 'assignment_ind', href: '/dashboard/pendaftaran', role: 'front' },
@@ -135,69 +171,112 @@ export function Sidebar({ active }: { active: string }) {
   ];
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 z-40 flex flex-col justify-between p-4 hidden lg:flex"
-      style={{ background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(20px)', borderRight: '1px solid rgba(188,201,198,0.4)', boxShadow: '0 0 30px rgba(15,23,42,0.05)' }}>
-      <div>
-        {/* Logo */}
-        <div className="flex items-center gap-3 px-3 py-2 mb-4">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00685f, #008378)' }}>
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1", fontSize: '20px' }}>local_hospital</span>
+    <>
+      <aside className="fixed top-0 left-0 h-screen w-64 z-40 flex flex-col justify-between p-4 hidden lg:flex"
+        style={{ background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(20px)', borderRight: '1px solid rgba(188,201,198,0.4)', boxShadow: '0 0 30px rgba(15,23,42,0.05)' }}>
+        <div>
+          {/* Logo */}
+          <div className="flex items-center gap-3 px-3 py-2 mb-4 cursor-pointer" onClick={() => router.push('/dashboard')}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00685f, #008378)' }}>
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1", fontSize: '20px' }}>local_hospital</span>
+            </div>
+            <div>
+              <span className="block font-extrabold text-[#131b2e] text-[0.95rem] tracking-tight">RS Sehat Nusantara</span>
+              <span className="text-[0.65rem] text-[#6d7a77] flex items-center gap-1 mt-0.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
+                SIMRS FHIR v4.2 • Online
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="block font-extrabold text-[#131b2e] text-[0.95rem] tracking-tight">RS Sehat Nusantara</span>
-            <span className="text-[0.65rem] text-[#6d7a77] flex items-center gap-1 mt-0.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
-              SIMRS FHIR v4.2 • Online
-            </span>
+
+          {/* Current Active User Role Badge */}
+          <div className="mx-1 mb-4 p-2.5 rounded-xl border border-[#00685f]/20" style={{ background: 'rgba(0,104,95,0.05)' }}>
+            <div className="text-[0.6rem] font-bold text-[#6d7a77] uppercase tracking-wider">Peran Sesi Aktif</div>
+            <div className="text-[0.8rem] font-extrabold text-[#00685f] truncate">{userProfile.roleTitle}</div>
+            <div className="text-[0.65rem] text-[#3d4947] truncate">{userProfile.unit}</div>
           </div>
+
+          <nav className="space-y-1">
+            <div className="px-3 pb-1 text-[0.65rem] font-extrabold text-[#6d7a77] uppercase tracking-wider">Navigasi Modul SIMRS</div>
+            {navItems.map((item) => {
+              const isActive = active === item.href;
+              const isUserRoleModule = item.role === userProfile.roleId;
+
+              return (
+                <button key={item.href} onClick={() => router.push(item.href)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-[0.825rem] font-semibold transition-all duration-200 ${isActive ? 'text-[#00685f] shadow-sm ring-1 ring-[#00685f]/25 bg-[#00685f]/10' : 'text-[#3d4947] hover:text-[#00685f] hover:bg-white/60'}`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className="material-symbols-outlined text-[1.1rem]" style={{ color: isActive ? '#00685f' : '#6d7a77' }}>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </div>
+                  {isUserRoleModule && (
+                    <span className="w-2 h-2 rounded-full bg-[#00685f]"></span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
         </div>
 
-        {/* Current Active User Role Badge */}
-        <div className="mx-1 mb-4 p-2.5 rounded-xl border border-[#00685f]/20" style={{ background: 'rgba(0,104,95,0.05)' }}>
-          <div className="text-[0.6rem] font-bold text-[#6d7a77] uppercase tracking-wider">Peran Sesi Aktif</div>
-          <div className="text-[0.8rem] font-extrabold text-[#00685f] truncate">{userProfile.roleTitle}</div>
-          <div className="text-[0.65rem] text-[#3d4947] truncate">{userProfile.unit}</div>
+        <div className="space-y-2 pt-3 border-t border-[#bcc9c6]/30">
+          <button className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-white text-[0.8rem] font-bold shadow-md transition-all hover:scale-[1.01]"
+            style={{ background: 'linear-gradient(90deg, #ba0035, #f43f5e)' }}
+            onClick={() => {
+              playDingDongBell();
+              setShowCitoModal(true);
+            }}>
+            <span className="material-symbols-outlined text-[0.875rem]">warning</span>
+            Pendaftaran Pasien CITO
+          </button>
         </div>
+      </aside>
 
-        <nav className="space-y-1">
-          <div className="px-3 pb-1 text-[0.65rem] font-extrabold text-[#6d7a77] uppercase tracking-wider">Navigasi Modul SIMRS</div>
-          {navItems.map((item) => {
-            const isActive = active === item.href;
-            const isUserRoleModule = item.role === userProfile.roleId;
-
-            return (
-              <button key={item.href} onClick={() => router.push(item.href)}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-left text-[0.825rem] font-semibold transition-all duration-200 ${isActive ? 'text-[#00685f] shadow-sm ring-1 ring-[#00685f]/25 bg-[#00685f]/10' : 'text-[#3d4947] hover:text-[#00685f] hover:bg-white/60'}`}>
-                <div className="flex items-center gap-2.5">
-                  <span className="material-symbols-outlined text-[1.1rem]" style={{ color: isActive ? '#00685f' : '#6d7a77' }}>{item.icon}</span>
-                  <span>{item.label}</span>
-                </div>
-                {isUserRoleModule && (
-                  <span className="w-2 h-2 rounded-full bg-[#00685f]"></span>
-                )}
+      {/* CITO Emergency Modal */}
+      {showCitoModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in zoom-in-95">
+            <div className="flex items-center gap-3 text-red-600 border-b pb-3 border-slate-100">
+              <span className="material-symbols-outlined text-[2rem]">emergency</span>
+              <div>
+                <h3 className="text-[1.1rem] font-black text-[#131b2e]">Peringatan Pasien CITO / IGD</h3>
+                <p className="text-[0.75rem] text-slate-500">Prosedur penanganan darurat tanpa antrian normal</p>
+              </div>
+            </div>
+            <p className="text-[0.85rem] text-slate-700">
+              Sistem akan memprioritaskan pasien langsung ke <b>Ruang Resusitasi IGD / Triase Merah</b> dan membunyikan alarm panggilan perawat &amp; dokter penanggung jawab.
+            </p>
+            <div className="flex gap-2 justify-end pt-2">
+              <button onClick={() => setShowCitoModal(false)}
+                className="px-4 py-2 rounded-xl text-[0.8rem] font-semibold text-slate-600 hover:bg-slate-100">
+                Batal
               </button>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div className="space-y-2 pt-3 border-t border-[#bcc9c6]/30">
-        <button className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-white text-[0.8rem] font-bold shadow-md transition-all hover:scale-[1.01]"
-          style={{ background: 'linear-gradient(90deg, #ba0035, #f43f5e)' }}
-          onClick={() => router.push('/dashboard/perawat')}>
-          <span className="material-symbols-outlined text-[0.875rem]">warning</span>
-          Pendaftaran Pasien CITO
-        </button>
-      </div>
-    </aside>
+              <button onClick={() => {
+                setShowCitoModal(false);
+                router.push('/dashboard/perawat');
+              }} className="px-4 py-2 rounded-xl text-[0.8rem] font-bold text-white bg-red-600 hover:bg-red-700">
+                Buka Triase IGD &amp; Tangani CITO
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
-// Shared TopBar Component with Role Switcher & Logout
+// Shared TopBar Component with Role Switcher & Audio Calling Modals
 export function TopBar() {
   const router = useRouter();
   const { userProfile } = useCurrentUser();
   const [showRoleMenu, setShowRoleMenu] = useState(false);
+
+  // Call Antrean Modal State
+  const [showCallModal, setShowCallModal] = useState(false);
+  const [antreanNo, setAntreanNo] = useState('A-025');
+
+  // FHIR Sync Toast State
+  const [syncing, setSyncing] = useState(false);
+  const [syncToast, setSyncToast] = useState<string | null>(null);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -210,105 +289,164 @@ export function TopBar() {
     router.push(targetRoute);
   };
 
+  const triggerCallAntrean = () => {
+    playDingDongBell();
+    setShowCallModal(true);
+  };
+
+  const triggerFHIRSync = () => {
+    setSyncing(true);
+    setSyncToast(null);
+    setTimeout(() => {
+      setSyncing(false);
+      setSyncToast('✓ Sinkronisasi FHIR SATUSEHAT Sukses! 142 Encounter & 1,428 Patient resources tersinkronasi.');
+      setTimeout(() => setSyncToast(null), 4000);
+    }, 1200);
+  };
+
   return (
-    <header className="sticky top-0 w-full z-30 border-b border-[#bcc9c6]/30 shadow-sm"
-      style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(16px)' }}>
-      <div className="flex items-center justify-between px-4 lg:px-6 py-2.5">
-        <div className="flex items-center gap-4">
-          {/* Quick Search */}
-          <div className="relative w-48 sm:w-64">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[#6d7a77] text-[1.1rem]">search</span>
-            <input className="w-full pl-9 pr-3 py-1.5 text-[0.8rem] rounded-xl placeholder:text-[#6d7a77] focus:outline-none transition-all"
-              style={{ background: 'rgba(234,237,255,0.5)', border: '1px solid rgba(188,201,198,0.45)' }}
-              placeholder="Cari No. RM, NIK Pasien..." type="text" />
+    <>
+      <header className="sticky top-0 w-full z-30 border-b border-[#bcc9c6]/30 shadow-sm"
+        style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(16px)' }}>
+        <div className="flex items-center justify-between px-4 lg:px-6 py-2.5">
+          <div className="flex items-center gap-4">
+            {/* Quick Search */}
+            <div className="relative w-48 sm:w-64">
+              <span className="material-symbols-outlined absolute left-3 top-2.5 text-[#6d7a77] text-[1.1rem]">search</span>
+              <input className="w-full pl-9 pr-3 py-1.5 text-[0.8rem] rounded-xl placeholder:text-[#6d7a77] focus:outline-none transition-all"
+                style={{ background: 'rgba(234,237,255,0.5)', border: '1px solid rgba(188,201,198,0.45)' }}
+                placeholder="Cari No. RM, NIK Pasien..." type="text" />
+            </div>
+
+            {/* Quick Role Jump Buttons for Header */}
+            <div className="hidden xl:flex items-center gap-1 bg-[#eaedff]/60 p-1 rounded-xl">
+              {[
+                { id: 'front', label: 'Pendaftaran' },
+                { id: 'dpjp', label: 'Dokter' },
+                { id: 'nurse', label: 'Perawat' },
+                { id: 'pharma', label: 'Farmasi' },
+                { id: 'itadmin', label: 'IT Admin' },
+              ].map(r => (
+                <button key={r.id} onClick={() => handleSwitchRole(r.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[0.7rem] font-bold transition-all ${userProfile.roleId === r.id ? 'bg-[#00685f] text-white shadow' : 'text-[#3d4947] hover:text-[#00685f]'}`}>
+                  {r.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Quick Role Jump Buttons for Header */}
-          <div className="hidden xl:flex items-center gap-1 bg-[#eaedff]/60 p-1 rounded-xl">
-            {[
-              { id: 'front', label: 'Pendaftaran' },
-              { id: 'dpjp', label: 'Dokter' },
-              { id: 'nurse', label: 'Perawat' },
-              { id: 'pharma', label: 'Farmasi' },
-              { id: 'itadmin', label: 'IT Admin' },
-            ].map(r => (
-              <button key={r.id} onClick={() => handleSwitchRole(r.id)}
-                className={`px-2.5 py-1 rounded-lg text-[0.7rem] font-bold transition-all ${userProfile.roleId === r.id ? 'bg-[#00685f] text-white shadow' : 'text-[#3d4947] hover:text-[#00685f]'}`}>
-                {r.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 sm:gap-3">
-          <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#bcc9c6]/40 text-[#131b2e] text-[0.75rem] font-semibold hover:bg-white transition-colors"
-            style={{ background: 'rgba(255,255,255,0.6)' }}
-            onClick={() => router.push('/dashboard/antrian')}>
-            <span className="material-symbols-outlined text-[#00685f] text-[1rem]">campaign</span>
-            Panggil Antrean
-          </button>
-
-          <div className="h-6 w-[1px] bg-[#bcc9c6]/40 mx-1 hidden sm:block"></div>
-
-          {/* Role Switcher & User Profile Dropdown */}
-          <div className="relative">
-            <button onClick={() => setShowRoleMenu(!showRoleMenu)}
-              className="flex items-center gap-2.5 p-1.5 pl-2.5 rounded-xl border border-[#bcc9c6]/40 hover:bg-white transition-all text-left"
-              style={{ background: 'rgba(255,255,255,0.8)' }}>
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-[0.75rem] shadow-sm"
-                style={{ background: 'linear-gradient(135deg, #00685f, #006398)' }}>
-                {userProfile.initials}
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-[0.75rem] font-extrabold text-[#131b2e] leading-tight flex items-center gap-1">
-                  {userProfile.name}
-                  <span className="material-symbols-outlined text-[0.9rem] text-[#6d7a77]">expand_more</span>
-                </span>
-                <span className="text-[0.65rem] text-[#00685f] font-semibold">{userProfile.roleTitle}</span>
-              </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button onClick={triggerCallAntrean}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#bcc9c6]/40 text-[#131b2e] text-[0.75rem] font-semibold hover:bg-white transition-colors"
+              style={{ background: 'rgba(255,255,255,0.6)' }}>
+              <span className="material-symbols-outlined text-[#00685f] text-[1rem]">campaign</span>
+              Panggil Antrean
             </button>
 
-            {/* Dropdown Menu */}
-            {showRoleMenu && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white p-3 shadow-2xl border border-[#bcc9c6]/30 z-50 animate-in fade-in slide-in-from-top-2">
-                <div className="pb-2 border-b border-[#bcc9c6]/20 mb-2">
-                  <div className="text-[0.7rem] font-bold text-[#6d7a77] uppercase">Profil Pengguna Sesi</div>
-                  <div className="text-[0.8rem] font-bold text-[#131b2e]">{userProfile.name}</div>
-                  <div className="text-[0.65rem] text-[#6d7a77]">NIP: {userProfile.nip}</div>
-                  <div className="text-[0.65rem] font-semibold text-[#00685f] mt-0.5">{userProfile.unit}</div>
-                </div>
+            <button onClick={triggerFHIRSync} disabled={syncing}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-white text-[0.75rem] font-semibold shadow-md transition-all hover:scale-[1.01]"
+              style={{ background: 'linear-gradient(90deg, #00685f, #008378)', boxShadow: '0 4px 12px rgba(0,104,95,0.3)' }}>
+              <span className={`material-symbols-outlined text-[0.875rem] ${syncing ? 'animate-spin' : ''}`}>sync</span>
+              {syncing ? 'Syncing...' : 'Sinkronisasi FHIR'}
+            </button>
 
-                <div className="text-[0.65rem] font-extrabold text-[#6d7a77] uppercase tracking-wider mb-1 px-1">
-                  Beralih Tampilan Role (Demo):
+            <div className="h-6 w-[1px] bg-[#bcc9c6]/40 mx-1 hidden sm:block"></div>
+
+            {/* Role Switcher & User Profile Dropdown */}
+            <div className="relative">
+              <button onClick={() => setShowRoleMenu(!showRoleMenu)}
+                className="flex items-center gap-2.5 p-1.5 pl-2.5 rounded-xl border border-[#bcc9c6]/40 hover:bg-white transition-all text-left"
+                style={{ background: 'rgba(255,255,255,0.8)' }}>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-[0.75rem] shadow-sm"
+                  style={{ background: 'linear-gradient(135deg, #00685f, #006398)' }}>
+                  {userProfile.initials}
                 </div>
-                <div className="space-y-1 mb-2">
-                  {[
-                    { id: 'front', label: 'Loket Pendaftaran & Admisi', icon: 'assignment_ind' },
-                    { id: 'dpjp', label: 'Dokter Spesialis / DPJP', icon: 'stethoscope' },
-                    { id: 'nurse', label: 'Perawat & Triase', icon: 'medical_services' },
-                    { id: 'pharma', label: 'Apoteker & Depo Farmasi', icon: 'prescriptions' },
-                    { id: 'itadmin', label: 'Administrator IT & System', icon: 'shield_person' },
-                  ].map(r => (
-                    <button key={r.id} onClick={() => handleSwitchRole(r.id)}
-                      className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-[0.75rem] font-semibold transition-colors ${userProfile.roleId === r.id ? 'bg-[#00685f]/10 text-[#00685f] font-bold' : 'text-[#3d4947] hover:bg-[#eaedff]'}`}>
-                      <span className="material-symbols-outlined text-[1rem]" style={{ color: userProfile.roleId === r.id ? '#00685f' : '#6d7a77' }}>{r.icon}</span>
-                      <span>{r.label}</span>
+                <div className="flex flex-col text-left">
+                  <span className="text-[0.75rem] font-extrabold text-[#131b2e] leading-tight flex items-center gap-1">
+                    {userProfile.name}
+                    <span className="material-symbols-outlined text-[0.9rem] text-[#6d7a77]">expand_more</span>
+                  </span>
+                  <span className="text-[0.65rem] text-[#00685f] font-semibold">{userProfile.roleTitle}</span>
+                </div>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showRoleMenu && (
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white p-3 shadow-2xl border border-[#bcc9c6]/30 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="pb-2 border-b border-[#bcc9c6]/20 mb-2">
+                    <div className="text-[0.7rem] font-bold text-[#6d7a77] uppercase">Profil Pengguna Sesi</div>
+                    <div className="text-[0.8rem] font-bold text-[#131b2e]">{userProfile.name}</div>
+                    <div className="text-[0.65rem] text-[#6d7a77]">NIP: {userProfile.nip}</div>
+                    <div className="text-[0.65rem] font-semibold text-[#00685f] mt-0.5">{userProfile.unit}</div>
+                  </div>
+
+                  <div className="text-[0.65rem] font-extrabold text-[#6d7a77] uppercase tracking-wider mb-1 px-1">
+                    Beralih Tampilan Role (Demo):
+                  </div>
+                  <div className="space-y-1 mb-2">
+                    {[
+                      { id: 'front', label: 'Loket Pendaftaran & Admisi', icon: 'assignment_ind' },
+                      { id: 'dpjp', label: 'Dokter Spesialis / DPJP', icon: 'stethoscope' },
+                      { id: 'nurse', label: 'Perawat & Triase', icon: 'medical_services' },
+                      { id: 'pharma', label: 'Apoteker & Depo Farmasi', icon: 'prescriptions' },
+                      { id: 'itadmin', label: 'Administrator IT & System', icon: 'shield_person' },
+                    ].map(r => (
+                      <button key={r.id} onClick={() => handleSwitchRole(r.id)}
+                        className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-[0.75rem] font-semibold transition-colors ${userProfile.roleId === r.id ? 'bg-[#00685f]/10 text-[#00685f] font-bold' : 'text-[#3d4947] hover:bg-[#eaedff]'}`}>
+                        <span className="material-symbols-outlined text-[1rem]" style={{ color: userProfile.roleId === r.id ? '#00685f' : '#6d7a77' }}>{r.icon}</span>
+                        <span>{r.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 border-t border-[#bcc9c6]/20">
+                    <button onClick={handleLogout}
+                      className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-red-600 hover:bg-red-50 text-[0.75rem] font-bold transition-colors">
+                      <span className="material-symbols-outlined text-[1rem]">logout</span>
+                      Keluar Sesi (Logout)
                     </button>
-                  ))}
+                  </div>
                 </div>
-
-                <div className="pt-2 border-t border-[#bcc9c6]/20">
-                  <button onClick={handleLogout}
-                    className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-red-600 hover:bg-red-50 text-[0.75rem] font-bold transition-colors">
-                    <span className="material-symbols-outlined text-[1rem]">logout</span>
-                    Keluar Sesi (Logout)
-                  </button>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Sync Toast Notification */}
+      {syncToast && (
+        <div className="fixed bottom-5 right-5 z-50 p-4 rounded-2xl bg-emerald-900 text-white shadow-2xl border border-emerald-500/50 flex items-center gap-3 animate-in slide-in-from-bottom-5">
+          <span className="material-symbols-outlined text-[1.5rem] text-emerald-400">task_alt</span>
+          <div className="text-[0.8rem] font-semibold">{syncToast}</div>
+        </div>
+      )}
+
+      {/* Call Antrean Modal */}
+      {showCallModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4 animate-in zoom-in-95">
+            <div className="w-16 h-16 rounded-full bg-[#00685f]/10 text-[#00685f] flex items-center justify-center mx-auto">
+              <span className="material-symbols-outlined text-[2.5rem] animate-pulse">campaign</span>
+            </div>
+            <div>
+              <div className="text-[0.75rem] font-extrabold text-[#6d7a77] uppercase tracking-wider">Memanggil Nomor Antrean</div>
+              <div className="text-[3.5rem] font-black text-[#00685f] leading-none my-1">{antreanNo}</div>
+              <div className="text-[0.85rem] font-bold text-[#131b2e]">Menuju Loket 1 - Poli Penyakit Dalam</div>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button onClick={() => {
+                playDingDongBell();
+              }} className="flex-1 py-2.5 rounded-xl text-[0.8rem] font-bold text-[#00685f] border border-[#00685f]/30 hover:bg-[#00685f]/10">
+                Panggil Ulang
+              </button>
+              <button onClick={() => setShowCallModal(false)}
+                className="flex-1 py-2.5 rounded-xl text-[0.8rem] font-bold text-white bg-[#00685f]">
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -10,22 +10,24 @@ export default function ITAdminDashboard() {
 
   const [pingStatus, setPingStatus] = useState<string | null>(null);
   const [testingPing, setTestingPing] = useState(false);
+  const [showAuditModal, setShowAuditModal] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState<any>(null);
 
   const handlePingBridge = () => {
     setTestingPing(true);
     setPingStatus(null);
     setTimeout(() => {
-      setPingStatus('✓ SATUSEHAT Bridge Online — HTTP 200 OK (Latency: 34ms • SSL Valid)');
+      setPingStatus('✓ SATUSEHAT Bridge Online — HTTP 200 OK (Latency: 34ms • SSL Certificate Valid • OAuth2 Token Refreshed)');
       setTestingPing(false);
     }, 800);
   };
 
   const staffAccounts = [
-    { email: 'dokter@sehatnusantara.id', name: 'dr. Adrian Wijaya, Sp.PD', role: 'Dokter Spesialis (dpjp)', nip: '198805202021021004', unit: 'Poli Penyakit Dalam', status: 'ACTIVE' },
-    { email: 'perawat@sehatnusantara.id', name: 'Ns. Sari Indah, S.Kep', role: 'Perawat Tim (nurse)', nip: '199203152019032001', unit: 'Rawat Inap & Triase', status: 'ACTIVE' },
-    { email: 'apoteker@sehatnusantara.id', name: 'Apt. Riska Amalia, S.Farm', role: 'Apoteker (pharma)', nip: '199507202021032003', unit: 'Depo Farmasi Central', status: 'ACTIVE' },
-    { email: 'resepsionis@sehatnusantara.id', name: 'Budi Santoso, A.Md.RMK', role: 'Loket Pendaftaran (front)', nip: '199801012020011002', unit: 'Loket Admisi & RM', status: 'ACTIVE' },
-    { email: 'itadmin@sehatnusantara.id', name: 'Rizki Admin IT', role: 'Administrator IT (itadmin)', nip: '199204102018021001', unit: 'Departemen IT & SIMRS', status: 'ACTIVE' },
+    { email: 'dokter@sehatnusantara.id', name: 'dr. Adrian Wijaya, Sp.PD', role: 'Dokter Spesialis (dpjp)', nip: '198805202021021004', unit: 'Poli Penyakit Dalam', status: 'ACTIVE', lastLogin: '10 mnt lalu' },
+    { email: 'perawat@sehatnusantara.id', name: 'Ns. Sari Indah, S.Kep', role: 'Perawat Tim (nurse)', nip: '199203152019032001', unit: 'Rawat Inap & Triase', status: 'ACTIVE', lastLogin: '18 mnt lalu' },
+    { email: 'apoteker@sehatnusantara.id', name: 'Apt. Riska Amalia, S.Farm', role: 'Apoteker (pharma)', nip: '199507202021032003', unit: 'Depo Farmasi Central', status: 'ACTIVE', lastLogin: '45 mnt lalu' },
+    { email: 'resepsionis@sehatnusantara.id', name: 'Budi Santoso, A.Md.RMK', role: 'Loket Pendaftaran (front)', nip: '199801012020011002', unit: 'Loket Admisi & RM', status: 'ACTIVE', lastLogin: '2 mnt lalu' },
+    { email: 'itadmin@sehatnusantara.id', name: 'Rizki Admin IT', role: 'Administrator IT (itadmin)', nip: '199204102018021001', unit: 'Departemen IT & SIMRS', status: 'ACTIVE', lastLogin: 'Sedang Aktif' },
   ];
 
   const fhirEndpoints = [
@@ -36,6 +38,11 @@ export default function ITAdminDashboard() {
     { resource: 'Observation Resource (TTV)', path: '/r4/Observation', count: '1,120', status: '200 OK', latency: '39ms' },
   ];
 
+  const handleOpenAudit = (staff: any) => {
+    setSelectedStaff(staff);
+    setShowAuditModal(true);
+  };
+
   return (
     <div className="min-h-screen" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", background: 'linear-gradient(135deg, rgba(200,242,240,0.4) 0%, rgba(240,249,255,0.3) 50%, #faf8ff 100%)' }}>
       <Sidebar active="/dashboard/itadmin" />
@@ -45,7 +52,7 @@ export default function ITAdminDashboard() {
 
         <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
           {/* Header Banner */}
-          <div className="rounded-2xl p-5 flex items-center justify-between gap-4" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
+          <div className="rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg"
                 style={{ background: 'linear-gradient(135deg, #1e1b4b, #4338ca)' }}>
@@ -69,7 +76,7 @@ export default function ITAdminDashboard() {
           </div>
 
           {pingStatus && (
-            <div className="p-3.5 rounded-xl text-[0.8rem] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2">
+            <div className="p-3.5 rounded-xl text-[0.8rem] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2 animate-in fade-in">
               <span className="material-symbols-outlined text-[1.1rem]">task_alt</span>
               {pingStatus}
             </div>
@@ -131,10 +138,10 @@ export default function ITAdminDashboard() {
 
                 <div className="space-y-2 text-[0.75rem] font-mono">
                   {[
-                    { time: '10:18:22', event: 'AUTH_SUCCESS', desc: 'Login user: dokter@sehatnusantara.id (Role: dpjp)', level: 'INFO' },
-                    { time: '10:15:04', event: 'FHIR_SYNC', desc: 'Encounter #ENC-88219 synced to SATUSEHAT API', level: 'SUCCESS' },
-                    { time: '10:10:50', event: 'AUTH_SUCCESS', desc: 'Login user: perawat@sehatnusantara.id (Role: nurse)', level: 'INFO' },
-                    { time: '10:02:11', event: 'RLS_EVAL', desc: 'Row Level Security policy passed for patients table', level: 'INFO' },
+                    { time: '10:48:22', event: 'AUTH_SUCCESS', desc: 'Login user: dokter@sehatnusantara.id (Role: dpjp)', level: 'INFO' },
+                    { time: '10:45:04', event: 'FHIR_SYNC', desc: 'Encounter #ENC-88219 synced to SATUSEHAT API', level: 'SUCCESS' },
+                    { time: '10:40:50', event: 'AUTH_SUCCESS', desc: 'Login user: perawat@sehatnusantara.id (Role: nurse)', level: 'INFO' },
+                    { time: '10:32:11', event: 'RLS_EVAL', desc: 'Row Level Security policy passed for patients table', level: 'INFO' },
                   ].map((log, i) => (
                     <div key={i} className="p-2.5 rounded-lg bg-[#eaedff]/40 border border-[#bcc9c6]/20 flex items-center justify-between">
                       <div>
@@ -182,7 +189,8 @@ export default function ITAdminDashboard() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <button className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-indigo-700 border border-indigo-200 hover:bg-indigo-50">
+                        <button onClick={() => handleOpenAudit(s)}
+                          className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-indigo-700 border border-indigo-200 hover:bg-indigo-50">
                           Audit Log
                         </button>
                       </td>
@@ -194,6 +202,45 @@ export default function ITAdminDashboard() {
           </div>
         </main>
       </div>
+
+      {/* Staff Audit Log Modal */}
+      {showAuditModal && selectedStaff && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b pb-3 border-slate-100">
+              <div>
+                <h3 className="text-[1.1rem] font-extrabold text-[#131b2e]">Audit Sesi Staf: {selectedStaff.name}</h3>
+                <p className="text-[0.75rem] text-[#6d7a77]">Email: {selectedStaff.email} • NIP: {selectedStaff.nip}</p>
+              </div>
+              <button onClick={() => setShowAuditModal(false)} className="text-slate-400 hover:text-slate-600">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div className="space-y-2 text-[0.75rem] font-mono">
+              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="text-[#6d7a77]">Terakhir Login: <b className="text-slate-800">{selectedStaff.lastLogin}</b></div>
+                <div className="text-[#6d7a77]">IP Address: <b className="text-slate-800">182.253.44.102 (Surabaya, ID)</b></div>
+                <div className="text-[#6d7a77]">User-Agent: <b className="text-slate-800">Mozilla/5.0 (Windows NT 10.0) Chrome/128.0</b></div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-indigo-50/60 border border-indigo-200 space-y-1.5">
+                <div className="font-extrabold text-indigo-900">RIWAYAT TRANS AKSI TERAKHIR:</div>
+                <div className="text-slate-700">• 10:48:02 - Query `patients` table (Row Level Security Check Passed)</div>
+                <div className="text-slate-700">• 10:42:15 - Issued SATUSEHAT Token via Service Account</div>
+                <div className="text-slate-700">• 10:35:00 - Session Refreshed (JWT Token Valid 3600s)</div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button onClick={() => setShowAuditModal(false)}
+                className="px-4 py-2 rounded-xl bg-[#1e1b4b] text-white font-bold text-[0.8rem]">
+                Tutup Audit Log
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

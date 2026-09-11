@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sidebar, TopBar, useCurrentUser } from '../components';
+import { Sidebar, TopBar, useCurrentUser, playDingDongBell } from '../components';
 
 export default function PerawatDashboard() {
   const router = useRouter();
@@ -22,6 +22,16 @@ export default function PerawatDashboard() {
 
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  // SBAR Modal State
+  const [showSbarModal, setShowSbarModal] = useState(false);
+  const [selectedPatientSbar, setSelectedPatientSbar] = useState<any>(null);
+  const [sbarNote, setSbarNote] = useState({
+    situation: 'Pasien mengeluhkan pusing dan leher kaku.',
+    background: 'Riwayat hipertensi stage 2 tidak teratur minum obat.',
+    assessment: 'Tekanan darah 135/85 mmHg, SpO2 97%. Kondisi stabil.',
+    recommendation: 'Lanjutkan observasi TTV per 4 jam, konsul DPJP untuk penyesuaian dosis Amlodipine.',
+  });
 
   const mockTriagePatients = [
     { no: 'T-001', rm: 'RM-2025-08942', name: 'Budi Santoso', age: '35 Thn', triase: 'Kuning', td: '135/85', hr: '92 bpm', temp: '37.8 °C', spo2: '97%', status: 'Menunggu DPJP', cito: false },
@@ -52,11 +62,23 @@ export default function PerawatDashboard() {
       if (!res.ok) throw new Error(json.error || 'Gagal menyimpan TTV');
 
       setToast(`Tanda-Tanda Vital (TTV) berhasil disimpan & disinkronkan ke SATUSEHAT!`);
+      setTimeout(() => setToast(null), 4000);
     } catch (err: any) {
       setToast(`Error: ${err.message}`);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenSbar = (patient: any) => {
+    setSelectedPatientSbar(patient);
+    setShowSbarModal(true);
+  };
+
+  const handleSaveSbar = () => {
+    setShowSbarModal(false);
+    setToast(`Catatan SBAR Keperawatan untuk ${selectedPatientSbar?.name} berhasil disimpan ke Rekam Medis.`);
+    setTimeout(() => setToast(null), 4000);
   };
 
   return (
@@ -68,7 +90,7 @@ export default function PerawatDashboard() {
 
         <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
           {/* Perawat Header */}
-          <div className="rounded-2xl p-5 flex items-center justify-between gap-4" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
+          <div className="rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg"
                 style={{ background: 'linear-gradient(135deg, #008378, #006194)' }}>
@@ -84,13 +106,22 @@ export default function PerawatDashboard() {
                 </div>
               </div>
             </div>
-            <button onClick={() => router.push('/dashboard/antrian')}
-              className="px-4 py-2 rounded-xl text-white font-bold text-[0.8rem] shadow-md flex items-center gap-2"
+            <button onClick={() => {
+              playDingDongBell();
+              setToast('🔔 MEMANGGIL TIM TRIASE CITO IGD DARURAT!');
+            }} className="px-4 py-2.5 rounded-xl text-white font-bold text-[0.8rem] shadow-md flex items-center gap-2"
               style={{ background: 'linear-gradient(90deg, #ba0035, #f43f5e)' }}>
               <span className="material-symbols-outlined text-[1rem]">emergency</span>
               Panggil Triase CITO
             </button>
           </div>
+
+          {toast && (
+            <div className="p-3.5 rounded-xl text-[0.8rem] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2 animate-in fade-in">
+              <span className="material-symbols-outlined text-[1.1rem]">task_alt</span>
+              {toast}
+            </div>
+          )}
 
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -125,13 +156,6 @@ export default function PerawatDashboard() {
                   </div>
                 </div>
 
-                {toast && (
-                  <div className="p-3 rounded-xl mb-4 text-[0.8rem] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[1.1rem]">task_alt</span>
-                    {toast}
-                  </div>
-                )}
-
                 <form onSubmit={handleSaveVitals} className="space-y-3.5">
                   <div>
                     <label className="block text-[0.75rem] font-bold text-[#131b2e] mb-1">Pilih Pasien</label>
@@ -139,10 +163,10 @@ export default function PerawatDashboard() {
                       onChange={(e) => setVitals({ ...vitals, patient_name: e.target.value })}
                       className="w-full px-3.5 py-2 rounded-xl text-[0.85rem] border border-[#bcc9c6]/50 focus:outline-none"
                       style={{ background: 'rgba(234,237,255,0.4)' }}>
-                      <option value="Budi Santoso">Budi Santoso (RM-2025-08942)</option>
-                      <option value="Djoko Wahyudi">Djoko Wahyudi (RM-2025-08939 - CITO)</option>
-                      <option value="Dewi Wulandari">Dewi Wulandari (RM-2025-08415)</option>
-                      <option value="Siti Rahmawati">Siti Rahmawati (RM-2025-08413)</option>
+                      <option value="Budi Santoso (RM-2025-08942)">Budi Santoso (RM-2025-08942)</option>
+                      <option value="Djoko Wahyudi (RM-2025-08939)">Djoko Wahyudi (RM-2025-08939 - CITO)</option>
+                      <option value="Dewi Wulandari (RM-2025-08415)">Dewi Wulandari (RM-2025-08415)</option>
+                      <option value="Siti Rahmawati (RM-2025-08413)">Siti Rahmawati (RM-2025-08413)</option>
                     </select>
                   </div>
 
@@ -253,7 +277,8 @@ export default function PerawatDashboard() {
                             className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-[#008378] border border-[#008378]/30 hover:bg-[#008378]/10">
                             Update TTV
                           </button>
-                          <button className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-white bg-[#008378]">
+                          <button onClick={() => handleOpenSbar(p)}
+                            className="px-2.5 py-1 rounded-lg text-[0.7rem] font-bold text-white bg-[#008378] hover:bg-[#00685f]">
                             Catat SBAR
                           </button>
                         </div>
@@ -266,6 +291,57 @@ export default function PerawatDashboard() {
           </div>
         </main>
       </div>
+
+      {/* SBAR Nurse Notes Modal */}
+      {showSbarModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b pb-3 border-slate-100">
+              <div>
+                <h3 className="text-[1.1rem] font-extrabold text-[#131b2e]">Catatan Perkembangan SBAR Perawat</h3>
+                <p className="text-[0.75rem] text-[#6d7a77]">Pasien: {selectedPatientSbar?.name} ({selectedPatientSbar?.rm})</p>
+              </div>
+              <button onClick={() => setShowSbarModal(false)} className="text-slate-400 hover:text-slate-600">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div className="space-y-3 text-[0.8rem]">
+              <div>
+                <label className="font-bold text-[#131b2e] block mb-1">Situation (S)</label>
+                <input type="text" value={sbarNote.situation} onChange={(e) => setSbarNote({ ...sbarNote, situation: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-200" />
+              </div>
+              <div>
+                <label className="font-bold text-[#131b2e] block mb-1">Background (B)</label>
+                <input type="text" value={sbarNote.background} onChange={(e) => setSbarNote({ ...sbarNote, background: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-200" />
+              </div>
+              <div>
+                <label className="font-bold text-[#131b2e] block mb-1">Assessment (A)</label>
+                <input type="text" value={sbarNote.assessment} onChange={(e) => setSbarNote({ ...sbarNote, assessment: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-200" />
+              </div>
+              <div>
+                <label className="font-bold text-[#131b2e] block mb-1">Recommendation (R)</label>
+                <input type="text" value={sbarNote.recommendation} onChange={(e) => setSbarNote({ ...sbarNote, recommendation: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-200" />
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end gap-2">
+              <button onClick={() => setShowSbarModal(false)}
+                className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-[0.8rem] font-semibold">
+                Batal
+              </button>
+              <button onClick={handleSaveSbar}
+                className="px-4 py-2 rounded-xl bg-[#008378] text-white font-bold text-[0.8rem]">
+                Simpan Catatan SBAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

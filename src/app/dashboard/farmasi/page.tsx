@@ -15,20 +15,34 @@ export default function FarmasiDashboard() {
     { id: 'R-104', noRm: 'RM-2025-08413', patientName: 'Siti Rahmawati', doctor: 'dr. Hendra Wijaya, Sp.PD', obat: 'Amlodipine 10mg #XXX (1x1), Metformin 500mg #LX (2x1)', status: 'Selesai', alert: null },
   ]);
 
-  const [selectedResep, setSelectedResep] = useState(resepList[0]);
   const [toast, setToast] = useState<string | null>(null);
+  const [showEtiketModal, setShowEtiketModal] = useState(false);
+  const [activeEtiket, setActiveEtiket] = useState<any>(null);
 
-  const handleUpdateStatus = (id: string, newStatus: string) => {
-    setResepList(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
-    setToast(`Status E-Resep ${id} berhasil diperbarui menjadi: ${newStatus}`);
-  };
-
-  const inventory = [
+  const [inventory, setInventory] = useState([
     { code: 'OBT-001', name: 'Paracetamol 500mg Tab', category: 'Analgetik', stock: 1240, unit: 'Tablet', exp: '2026-11-20', status: 'Aman' },
     { code: 'OBT-002', name: 'Amoxicillin 500mg Cap', category: 'Antibiotik', stock: 42, unit: 'Kapsul', exp: '2025-04-10', status: 'Kritis' },
     { code: 'OBT-003', name: 'Omeprazole 20mg Cap', category: 'Gastrolapan', stock: 520, unit: 'Kapsul', exp: '2026-08-15', status: 'Aman' },
     { code: 'OBT-004', name: 'Amlodipine 10mg Tab', category: 'Kardiologi', stock: 18, unit: 'Tablet', exp: '2025-02-28', status: 'Kritis' },
-  ];
+  ]);
+
+  const handleUpdateStatus = (id: string, newStatus: string) => {
+    setResepList(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
+    const item = resepList.find(r => r.id === id);
+    if (newStatus === 'Siap Ambil' && item) {
+      setActiveEtiket(item);
+      setShowEtiketModal(true);
+    } else {
+      setToast(`Status E-Resep ${id} berhasil diperbarui menjadi: ${newStatus}`);
+      setTimeout(() => setToast(null), 3500);
+    }
+  };
+
+  const handleRestock = (code: string) => {
+    setInventory(prev => prev.map(i => i.code === code ? { ...i, stock: i.stock + 100, status: 'Aman' } : i));
+    setToast(`Restock 100 unit untuk ${code} berhasil!`);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   return (
     <div className="min-h-screen" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", background: 'linear-gradient(135deg, rgba(200,242,240,0.4) 0%, rgba(240,249,255,0.3) 50%, #faf8ff 100%)' }}>
@@ -39,7 +53,7 @@ export default function FarmasiDashboard() {
 
         <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
           {/* Header Banner */}
-          <div className="rounded-2xl p-5 flex items-center justify-between gap-4" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
+          <div className="rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-2xl font-black shadow-lg"
                 style={{ background: 'linear-gradient(135deg, #4f46e5, #00685f)' }}>
@@ -61,13 +75,20 @@ export default function FarmasiDashboard() {
             </div>
           </div>
 
+          {toast && (
+            <div className="p-3.5 rounded-xl text-[0.8rem] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2 animate-in fade-in">
+              <span className="material-symbols-outlined text-[1.1rem]">task_alt</span>
+              {toast}
+            </div>
+          )}
+
           {/* Stats Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { label: 'E-Resep Masuk Hari Ini', value: '48', sub: 'Dari Poliklinik & IGD', icon: 'description', color: '#4f46e5' },
-              { label: 'Sedang Diracik Depo', value: '6', sub: 'Waktu racik ~8 menit', icon: 'hourglass_top', color: '#e57c00', warn: true },
-              { label: 'Siap Diserahkan', value: '12', sub: 'Siap panggil di Loket Farmasi', icon: 'task_alt', color: '#16a34a' },
-              { label: 'Stok Obat Kritis', value: '2 Item', sub: 'Amoxicillin 500mg, Amlodipine', icon: 'warning', color: '#ba0035', warn: true },
+              { label: 'Sedang Diracik Depo', value: resepList.filter(r=>r.status==='Sedang Diracik').length.toString(), sub: 'Waktu racik ~8 menit', icon: 'hourglass_top', color: '#e57c00', warn: true },
+              { label: 'Siap Diserahkan', value: resepList.filter(r=>r.status==='Siap Ambil').length.toString(), sub: 'Siap panggil di Loket Farmasi', icon: 'task_alt', color: '#16a34a' },
+              { label: 'Stok Obat Kritis', value: inventory.filter(i=>i.status==='Kritis').length.toString() + ' Item', sub: 'Perlu restock segera', icon: 'warning', color: '#ba0035', warn: true },
             ].map(s => (
               <div key={s.label} className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 4px 20px rgba(15,23,42,0.06)' }}>
                 <div className="flex items-center justify-between mb-2">
@@ -79,13 +100,6 @@ export default function FarmasiDashboard() {
               </div>
             ))}
           </div>
-
-          {toast && (
-            <div className="p-3.5 rounded-xl text-[0.8rem] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[1.1rem]">task_alt</span>
-              {toast}
-            </div>
-          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* E-Resep Queue List */}
@@ -176,9 +190,17 @@ export default function FarmasiDashboard() {
                     <div key={item.code} className="p-3 rounded-xl border border-[#bcc9c6]/20 bg-white/60">
                       <div className="flex items-center justify-between">
                         <span className="text-[0.8rem] font-bold text-[#131b2e]">{item.name}</span>
-                        <span className={`px-1.5 py-0.5 rounded text-[0.6rem] font-bold ${item.status === 'Kritis' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}`}>
-                          {item.status}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className={`px-1.5 py-0.5 rounded text-[0.6rem] font-bold ${item.status === 'Kritis' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}`}>
+                            {item.status}
+                          </span>
+                          {item.status === 'Kritis' && (
+                            <button onClick={() => handleRestock(item.code)}
+                              className="px-2 py-0.5 rounded text-[0.65rem] font-bold bg-indigo-600 text-white hover:bg-indigo-700">
+                              + Restock
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <div className="flex justify-between text-[0.7rem] text-[#6d7a77] mt-1">
                         <span>Stok: <b className="text-[#131b2e]">{item.stock} {item.unit}</b></span>
@@ -192,6 +214,56 @@ export default function FarmasiDashboard() {
           </div>
         </main>
       </div>
+
+      {/* Etiket Obat Modal */}
+      {showEtiketModal && activeEtiket && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b pb-3 border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-indigo-600 text-[1.5rem]">print</span>
+                <h3 className="text-[1.1rem] font-extrabold text-[#131b2e]">Pratinjau Etiket Obat Farmasi</h3>
+              </div>
+              <button onClick={() => setShowEtiketModal(false)} className="text-slate-400 hover:text-slate-600">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {/* Etiket Preview Box */}
+            <div className="p-4 rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50/50 space-y-2 text-[0.8rem]">
+              <div className="font-extrabold text-center text-indigo-900 border-b border-indigo-200 pb-1">
+                INSTALASI FARMASI RS SEHAT NUSANTARA
+              </div>
+              <div className="flex justify-between font-mono text-[0.75rem]">
+                <span>No: {activeEtiket.id}</span>
+                <span>Tgl: {new Date().toLocaleDateString('id-ID')}</span>
+              </div>
+              <div className="font-bold text-[#131b2e]">Pasien: {activeEtiket.patientName} ({activeEtiket.noRm})</div>
+              <div className="p-2.5 rounded-xl bg-white border border-indigo-200 font-mono font-bold text-indigo-900 text-[0.85rem]">
+                {activeEtiket.obat}
+              </div>
+              <div className="text-[0.7rem] text-slate-500 italic text-center">
+                Apoteker: {userProfile.name} • SIPA: 19950720/SIPA/2021
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end gap-2">
+              <button onClick={() => setShowEtiketModal(false)}
+                className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-[0.8rem] font-semibold">
+                Batal
+              </button>
+              <button onClick={() => {
+                setShowEtiketModal(false);
+                setToast(`Etiket obat ${activeEtiket.id} berhasil dicetak! Resep siap diserahkan.`);
+                setTimeout(() => setToast(null), 3500);
+              }} className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-[0.8rem] flex items-center gap-1">
+                <span className="material-symbols-outlined text-[1rem]">print</span>
+                Cetak Etiket Stiker
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
