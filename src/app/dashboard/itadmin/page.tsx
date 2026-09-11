@@ -77,10 +77,10 @@ export default function ITAdminDashboard() {
       });
 
       const json = await res.json();
-      if (!res.ok || json.error) {
+      if (!res.ok || json.error || json.success === false) {
         setAuthResult({
           success: false,
-          message: json.error || 'Gagal mengirimkan transaksi FHIR ke Kemenkes.',
+          message: json.message || json.error || 'Gagal mengirimkan transaksi FHIR ke Kemenkes.',
           data: json,
         });
       } else {
@@ -259,10 +259,15 @@ export default function ITAdminDashboard() {
                   </div>
                   {authResult.data && (
                     <div className="text-[0.75rem] pt-1 opacity-90">
-                      <div>Environment: <b className="uppercase">{authResult.data.environment}</b></div>
-                      <div>Org ID: {authResult.data.organization_id}</div>
-                      <div>Masked Token: <span className="text-emerald-700 font-bold">{authResult.data.access_token_masked}</span></div>
-                      <div>Token Expiry: {authResult.data.expires_in} seconds</div>
+                      <div>Environment: <b className="uppercase">{authResult.data.environment || 'SANDBOX'}</b></div>
+                      {authResult.data.organization_id && <div>Org ID: {authResult.data.organization_id}</div>}
+                      {authResult.data.access_token_masked && <div>Masked Token: <span className="text-emerald-700 font-bold">{authResult.data.access_token_masked}</span></div>}
+                      {authResult.data.kemenkes_response && (
+                        <div className="mt-2 p-2 bg-slate-900 text-emerald-300 rounded-xl font-mono text-[0.7rem] overflow-x-auto max-h-48">
+                          <div className="font-bold text-amber-400 border-b border-slate-700 pb-1 mb-1">Raw Response dari Server Kemenkes SATUSEHAT:</div>
+                          <pre>{JSON.stringify(authResult.data.kemenkes_response, null, 2)}</pre>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
